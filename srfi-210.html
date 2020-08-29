@@ -89,7 +89,7 @@
 
     <h3>Syntax</h3>
 
-    <p><code>(apply/mv ⟨operator⟩ ⟨operand<sub>1</sub>⟩… ⟨producer⟩)</p></code>
+    <p><code>(apply/mv ⟨operator⟩ ⟨operand<sub>1</sub>⟩… ⟨producer⟩)</code></p>
 
     <p><i>Syntax:</i> <code>⟨Operator⟩</code>,
     each <code>⟨operand⟩</code>, and <code> ⟨producer⟩</code> can be
@@ -107,7 +107,7 @@
 
     <p>The <code>apply/mv</code> syntax could be defined by</p>
 
-    <small><pre>
+    <pre><small>
     (define-syntax apply/mv
       (syntax-rules ()
         ((apply/mv operator operand1 ... producer)
@@ -120,15 +120,15 @@
                         (apply proc arg1 ... args)))
                      ((aux operator (operand1 operand2 ...) (temp ...) producer)
                       (aux operator (operand2 ...) (temp ... (operand1 arg1)) producer)))))
-           (aux operator (operand1 ...) () producer)))))</pre></small>
+           (aux operator (operand1 ...) () producer)))))</small></pre>
 
     <p>A trick is used to generate the temporary names needed to avoid
       specifying the order in which the values are evaluated.</p>
 
-    <small><pre>
-    (apply/mv string #\a (values #\b #\c))   ⟹ "abc"</pre></small>
+    <pre><small>
+    (apply/mv string #\a (values #\b #\c))   ⟹ "abc"</small></pre>
 
-    <p><code>(list/mv ⟨element<sub>1</sub>⟩… ⟨producer⟩)</p></code>
+    <p><code>(list/mv ⟨element<sub>1</sub>⟩… ⟨producer⟩)</code></p>
 
     <p><i>Syntax:</i> Each <code>⟨element⟩</code> and <code>
      ⟨producer⟩</code> can be any expression.</p>
@@ -143,16 +143,16 @@
 
     <p>The <code>list/mv</code> syntax could be defined by</p>
 
-    <small><pre>
+    <pre><small>
     (define-syntax list/mv
       (syntax-rules ()
         ((list/mv element1 ... producer)
-         (apply/mv list element1 ... producer))))</pre></small>
+         (apply/mv list element1 ... producer))))</small></pre>
 
-    <small><pre>
-    (list/mv 'a (values 'b 'c))   ⟹ (a b c)</pre></small>
+    <pre><small>
+    (list/mv 'a (values 'b 'c))   ⟹ (a b c)</small></pre>
 
-    <p><code>(vector/mv ⟨element<sub>1</sub>⟩… ⟨producer⟩)</p></code>
+    <p><code>(vector/mv ⟨element<sub>1</sub>⟩… ⟨producer⟩)</code></p>
 
     <p><i>Syntax:</i> Each <code>⟨element⟩</code> and <code>
      ⟨producer⟩</code> can be any expression.</p>
@@ -167,16 +167,16 @@
 
     <p>The <code>vector/mv</code> syntax could be defined by</p>
 
-    <small><pre>
+    <pre><small>
     (define-syntax list/mv
       (syntax-rules ()
         ((vector/mv element1 ... producer)
-         (apply/mv vector element1 ... producer))))</pre></small>
+         (apply/mv vector element1 ... producer))))</small></pre>
 
-    <small><pre>
-    (vector/mv 'a (values 'b 'c))   ⟹ #(a b c)</pre></small>
+    <pre><small>
+    (vector/mv 'a (values 'b 'c))   ⟹ #(a b c)</small></pre>
 
-    <p><code>(value/mv ⟨index⟩ ⟨operand<sub>1</sub>⟩… ⟨producer⟩)</p></code>
+    <p><code>(value/mv ⟨index⟩ ⟨operand<sub>1</sub>⟩… ⟨producer⟩)</code></p>
 
     <p><i>Syntax:</i> <code>⟨Index⟩</code>,
      each <code>⟨operand⟩</code>, and <code> ⟨producer⟩</code> can be
@@ -195,14 +195,14 @@
 
     <p>The <code>value/mv</code> syntax could be defined by</p>
 
-    <small><pre>
+    <pre><small>
     (define-syntax value/mv
       (syntax-rules ()
         ((value/mv index operand1 ... producer)
-         (apply/mv value index operand1 ... producer))))</pre></small>
+         (apply/mv value index operand1 ... producer))))</small></pre>
 
-    <small><pre>
-    (value/mv 1 'a (values 'b 'c))   ⟹ b</pre></small>
+    <pre><small>
+    (value/mv 1 'a (values 'b 'c))   ⟹ b</small></pre>
 
     <p><code>(arity ⟨producer⟩)</code></p>
 
@@ -215,15 +215,15 @@
 
     <p>The <code>arity</code> syntax could be defined by</p>
 
-    <small><pre>
+    <pre><small>
     (define-syntax arity
       (syntax-rules ()
         ((arity producer)
          (let-values ((res (producer)))
-           (length res)))))</pre></small>
+           (length res)))))</small></pre>
 
-    <small><pre>
-    (arity (values 'a 'b 'c))   ⟹ 3</pre></small>
+    <pre><small>
+    (arity (values 'a 'b 'c))   ⟹ 3</small></pre>
 
     <p><code>(set!-values ⟨formals⟩ ⟨producer⟩)</code></p>
 
@@ -243,7 +243,7 @@
 
     <p>The <code>set!-values</code> syntax could be defined by</p>
 
-    <small><pre>
+    <pre><small>
     (define-syntax set!-values
       (syntax-rules ()
         ((set!-values (var1 ...) producer)
@@ -267,12 +267,12 @@
            (aux (var1 ... var*) () producer)))
         ((set!-values var* producer)
          (let-values ((temp*) producer)
-           (set! var* temp*)))))</pre></small>
+           (set! var* temp*)))))</small></pre>
 
-    <small><pre>
+    <pre><small>
     (let ((x #f) (y #f))
       (set!-values (x . y) (values 'a 'b))
-      (list x y))                            ⟹ (a (b))</pre></small>
+      (list x y))                            ⟹ (a (b))</small></pre>
 
     <p><code>(with-values ⟨producer⟩ ⟨consumer⟩)</code></p>
 
@@ -289,15 +289,15 @@
 
     <p>The <code>with-values</code> syntax could be defined by</p>
 
-    <small><pre>
+    <pre><small>
     (define-syntax with-values
       (syntax-rules ()
         ((with-values producer consumer)
-         (apply/mv consumer producer))))</pre></small>
+         (apply/mv consumer producer))))</small></pre>
 
-    <small><pre>
+    <pre><small>
     (with-values (values 4 5)
-      (lambda (a b) b))         ⟹ 5</pre></small>
+      (lambda (a b) b))         ⟹ 5</small></pre>
 
     <p><code>(case-receive ⟨Producer⟩ (clause …)</code></p>
 
@@ -319,17 +319,17 @@
 
     <p>The <code>case-receive</code> syntax could be defined by</p>
 
-    <small><pre>
+    <pre><small>
     (define-syntax case-receive
       (syntax-rules ()
         ((case-receive producer clause ...)
          (with-values producer
-           (case-lambda clause ...)))</pre></small>
+           (case-lambda clause ...)))</small></pre>
 
-    <small><pre>
+    <pre><small>
     (case-receive (values 'a 'b)
       ((x) #f)
-      ((x . y) (list x y)))        ⟹ (a (b))</pre></small>
+      ((x . y) (list x y)))        ⟹ (a (b))</small></pre>
 
     <h3>Procedures</h3>
 
@@ -343,12 +343,12 @@
       defined by
     </p>
 
-    <small><pre>
+    <pre><small>
     (define (list-values lis)
-      (apply values lis))</pre></small>
+      (apply values lis))</small></pre>
 
-    <small><pre>
-    (list-values '(a b c))   ⟹ a b c</pre></small>
+    <pre><small>
+    (list-values '(a b c))   ⟹ a b c</small></pre>
 
     <p><code>(vector-values <var>vec</var>)</code></p>
 
@@ -360,14 +360,14 @@
       defined by
     </p>
 
-    <small><pre>
+    <pre><small>
     (define (vector-values vec)
-      (list-values (vector-&gt;list vec)))</pre></small>
+      (list-values (vector-&gt;list vec)))</small></pre>
 
-    <small><pre>
-    (vector-values #(a b c))   ⟹ a b c</pre></small>
+    <pre><small>
+    (vector-values #(a b c))   ⟹ a b c</small></pre>
 
-    <p><code>(value <var>index</var> <var>obj<sub>0</var> … <var>obj<sub>n-1</sub></var>)</code></p>
+    <p><code>(value <var>index</var> <var>obj<sub>0</sub></var> … <var>obj<sub>n-1</sub></var>)</code></p>
 
     <p>It is an error if <code><var>index</var></code> is not an exact non-negative
       integer less than <code><var>n</var></code>.</p>
@@ -375,12 +375,12 @@
     <p>The <code>value</code> procedure simply returns its
     argument <code><var>obj<sub>index</sub></var></code>.  It could be defined by</p>
 
-    <small><pre>
+    <pre><small>
     (define (value k . objs)
-      (list-ref objs k))</pre></small>
+      (list-ref objs k))</small></pre>
 
-    <small><pre>
-    (value 1 'a 'b 'c)   ⟹ b</pre></small>
+    <pre><small>
+    (value 1 'a 'b 'c)   ⟹ b</small></pre>
 
     <h2 id="implementation">Implementation</h2>
 
