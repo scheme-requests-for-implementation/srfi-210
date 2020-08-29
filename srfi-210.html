@@ -19,7 +19,7 @@
     <p>
       This SRFI extends the Scheme standard with a number of
       procedures and syntax dealing with multiple values, including
-      syntax to create lists and vectors from expression returning
+      syntax to create lists and vectors from expressions returning
       multiple values and procedures returning the elements of a list
       or vector as multiple values.
     </p>
@@ -74,15 +74,15 @@
       <a href="https://srfi.schemers.org/srfi-11/srfi-11.html">SRFI
       11</a> added binding constructs for multiple values.  Yet, these
       do not cover all most-used idioms when dealing with multiple
-      values and thus asking for this complementary SRFI.
+      values.  Thus the need for this complementary SRFI.
     </p>
 
     <p>
-      Some of the syntax and procedures defined here also appears
+      Some of the syntax and procedures defined here also appear
       in <a href="https://srfi.schemers.org/srfi-71/srfi-71.html">SRFI
       71</a>, albeit under different names.  SRFI 71, however, is
-      mostly concerned with extending the <code>let</code> keyword and
-      to implement it one needs a mechanism to change this keyword.
+      mostly concerned with extending the <code>let</code> keyword.
+      To implement it, one needs a mechanism to change this keyword.
     </p>
 
     <h2 id="specification">Specification</h2>
@@ -95,14 +95,14 @@
     each <code>⟨operand⟩</code>, and <code> ⟨producer⟩</code> can be
     any expression.</p>
 
-    <p><i>Semantics:</i> A <code>apply/mv</code> expression is
+    <p><i>Semantics:</i> An <code>apply/mv</code> expression is
     evaluated as follows: <code>⟨Operator⟩</code>,
     each <code>⟨operand⟩</code>, and <code> ⟨producer⟩</code> are
     evaluated in an unspecified order.  The procedure resulting from
     evaluating <code>⟨operator⟩</code> is then tail-called with the
     single values of the <code>⟨operand⟩</code>s and the multiple
-    values of <code>⟨producer⟩</code> as the actual arguments and its
-    values are returned.
+    values of <code>⟨producer⟩</code> as the actual arguments.  The
+    values returned by the procedure are returned.
     </p>
 
     <p>The <code>apply/mv</code> syntax could be defined by</p>
@@ -284,8 +284,8 @@
     and <code>⟨consumer⟩</code> are evaluated in an unspecified order.
     The procedure resulting from evaluating <code>⟨consumer⟩</code> is
     then tail-called with the multiple values
-    of <code>⟨producer⟩</code> as the actual arguments and its values
-    are returned.</p>
+    of <code>⟨producer⟩</code> as the actual arguments, and its return
+    values are returned.</p>
 
     <p>The <code>with-values</code> syntax could be defined by</p>
 
@@ -387,8 +387,7 @@
     <p>A
     portable <a href="https://small.r7rs.org/attachment/r7rs.pdf">R7RS</a>
     implementation is underway and can also be deduced from the
-    complete definitions of all syntax and procedures are given
-    above.</p>
+    complete definitions of all syntax and procedures given above.</p>
 
     <p>Implementers are encouraged to distribute specialized
       implementations with their Schemes that implement the described
