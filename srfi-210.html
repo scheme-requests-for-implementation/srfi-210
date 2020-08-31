@@ -97,19 +97,19 @@
 
     <h3>Syntax</h3>
 
-    <p><code>(apply/mv ⟨operator⟩ ⟨operand<sub>1</sub>⟩… ⟨producer⟩)</code></p>
+    <p><code>(apply/mv ‹operator› ‹operand<sub>1</sub>›… ‹producer›)</code></p>
 
-    <p><i>Syntax:</i> <code>⟨Operator⟩</code>,
-    each <code>⟨operand⟩</code>, and <code> ⟨producer⟩</code> can be
+    <p><i>Syntax:</i> <code>‹Operator›</code>,
+    each <code>‹operand›</code>, and <code>‹producer›</code> can be
     any expression.</p>
 
     <p><i>Semantics:</i> An <code>apply/mv</code> expression is
-    evaluated as follows: <code>⟨Operator⟩</code>,
-    each <code>⟨operand⟩</code>, and <code> ⟨producer⟩</code> are
+    evaluated as follows: <code>‹Operator›</code>,
+    each <code>‹operand›</code>, and <code>‹producer›</code> are
     evaluated in an unspecified order.  The procedure resulting from
-    evaluating <code>⟨operator⟩</code> is then tail-called with the
-    single values of the <code>⟨operand⟩</code>s and the multiple
-    values of <code>⟨producer⟩</code> as the actual arguments.  The
+    evaluating <code>‹operator›</code> is then tail-called with the
+    single values of the <code>‹operand›</code>s and the multiple
+    values of <code>‹producer›</code> as the actual arguments.  The
     values returned by the procedure are returned.
     </p>
 
@@ -119,15 +119,16 @@
     (define-syntax apply/mv
       (syntax-rules ()
         ((apply/mv operator operand1 ... producer)
-         (let-syntax
-             ((aux (syntax-rules ()
-                     ((aux operator () ((operand1 arg1) ...) producer)
-                      (let-values (((proc) operator)
-                                   ((arg1) operand1) ...
-                                   (args producer))
-                        (apply proc arg1 ... args)))
-                     ((aux operator (operand1 operand2 ...) (temp ...) producer)
-                      (aux operator (operand2 ...) (temp ... (operand1 arg1)) producer)))))
+         (letrec-syntax
+             ((aux (syntax-rules ::: ()
+                     ((aux %operator () ((%operand1 arg1) :::) %producer)
+                      (let-values (((proc) %operator)
+                                   ((arg1) %operand1) :::
+                                   (args %producer))
+                        (apply proc arg1 ::: args)))
+                     ((aux %operator (%operand1 operand2 :::) (temp :::) %producer)
+                      (aux %operator (operand2 :::) (temp ::: (%operand1 arg1))
+                           %producer)))))
            (aux operator (operand1 ...) () producer)))))</pre>
 
     <p>A trick is used to generate the temporary names needed to avoid
@@ -136,17 +137,54 @@
     <pre>
     (apply/mv string #\a (values #\b #\c))   ⟹ "abc"</pre>
 
-    <p><code>(list/mv ⟨element<sub>1</sub>⟩… ⟨producer⟩)</code></p>
+    <p><code>(call/mv ‹consumer› ‹producer<sub>1</sub>›…)</code></p>
 
-    <p><i>Syntax:</i> Each <code>⟨element⟩</code> and <code>
-     ⟨producer⟩</code> can be any expression.</p>
+    <p><i>Syntax:</i> <code>‹Consumer›</code> and each <code>‹producer›</code> can be
+    any expression.</p>
+
+    <p><i>Semantics:</i> An <code>call/mv</code> expression is
+    evaluated as follows: <code>‹Consumer›</code> and
+    each <code>‹producer›</code> are evaluated in an unspecified
+    order.  The procedure resulting from
+    evaluating <code>‹consumer›</code> is then tail-called with the
+    mutiple values of the <code>‹producers›</code>s in that order as
+    the actual arguments.  The values returned by the procedure are
+    returned.
+    </p>
+
+    <p><i>Note:</i> This syntax is equivalent to the Common Lisp function
+      <code>multiple-value-call</code>.</p>
+
+    <p>The <code>call/mv</code> syntax could be defined by</p>
+
+    <pre>
+    (define-syntax call/mv
+      (syntax-rules ()
+        ((call/mv consumer producer1 ...)
+         (letrec-syntax
+             ((aux (syntax-rules ::: ()
+                     ((aux %consumer () ((%producer1 args1) :::))
+                      (let-values (((proc) %consumer)
+                                   (args1 %producer1) :::)
+                        (apply proc (append args1 :::))))
+                     ((aux %consumer (%producer1 producer2 :::) (temp :::))
+                      (aux %consumer (producer2 :::) (temp ::: (%producer1 args1)))))))
+           (aux consumer (producer1 ...) ())))))</pre>
+
+    <pre>
+    (call/mv string (values #\a #\b) (values #\c #\d))   ⟹ "abcd"</pre>
+
+    <p><code>(list/mv ‹element<sub>1</sub>›… ‹producer›)</code></p>
+
+    <p><i>Syntax:</i> Each <code>‹element›</code> and <code>
+     ‹producer›</code> can be any expression.</p>
 
     <p><i>Semantics:</i> A <code>list/mv</code> expression is
-      evaluated as follows: Each <code>⟨element⟩</code>
-      and <code>⟨producer⟩</code> are evaluated in an unspecified
+      evaluated as follows: Each <code>‹element›</code>
+      and <code>‹producer›</code> are evaluated in an unspecified
       order.  A list constructed from the
-      single values of the <code>⟨elements⟩</code>s and the multiple
-      values of <code>⟨producer⟩</code> is then returned.
+      single values of the <code>‹elements›</code>s and the multiple
+      values of <code>‹producer›</code> is then returned.
     </p>
 
     <p>The <code>list/mv</code> syntax could be defined by</p>
@@ -160,23 +198,23 @@
     <pre>
     (list/mv 'a (values 'b 'c))   ⟹ (a b c)</pre>
 
-    <p><code>(vector/mv ⟨element<sub>1</sub>⟩… ⟨producer⟩)</code></p>
+    <p><code>(vector/mv ‹element<sub>1</sub>›… ‹producer›)</code></p>
 
-    <p><i>Syntax:</i> Each <code>⟨element⟩</code> and <code>
-     ⟨producer⟩</code> can be any expression.</p>
+    <p><i>Syntax:</i> Each <code>‹element›</code> and <code>
+     ‹producer›</code> can be any expression.</p>
 
     <p><i>Semantics:</i> A <code>vector/mv</code> expression is
-      evaluated as follows: Each <code>⟨element⟩</code>
-      and <code>⟨producer⟩</code> are evaluated in an unspecified
+      evaluated as follows: Each <code>‹element›</code>
+      and <code>‹producer›</code> are evaluated in an unspecified
       order.  A vector constructed from the
-      single values of the <code>⟨elements⟩</code>s and the multiple
-      values of <code>⟨producer⟩</code> is then returned.
+      single values of the <code>‹elements›</code>s and the multiple
+      values of <code>‹producer›</code> is then returned.
     </p>
 
     <p>The <code>vector/mv</code> syntax could be defined by</p>
 
     <pre>
-    (define-syntax list/mv
+    (define-syntax vector/mv
       (syntax-rules ()
         ((vector/mv element1 ... producer)
          (apply/mv vector element1 ... producer))))</pre>
@@ -184,20 +222,20 @@
     <pre>
     (vector/mv 'a (values 'b 'c))   ⟹ #(a b c)</pre>
 
-    <p><code>(value/mv ⟨index⟩ ⟨operand<sub>1</sub>⟩… ⟨producer⟩)</code></p>
+    <p><code>(value/mv ‹index› ‹operand<sub>1</sub>› … ‹producer›)</code></p>
 
-    <p><i>Syntax:</i> <code>⟨Index⟩</code>,
-     each <code>⟨operand⟩</code>, and <code> ⟨producer⟩</code> can be
+    <p><i>Syntax:</i> <code>‹Index›</code>,
+     each <code>‹operand›</code>, and <code> ‹producer›</code> can be
      any expression.</p>
 
     <p><i>Semantics:</i> A <code>value/mv</code> expression is
-      evaluated as follows: <code>⟨Index⟩</code>,
-      each <code>⟨element⟩</code> and <code>⟨producer⟩</code> are
+      evaluated as follows: <code>‹Index›</code>,
+      each <code>‹element›</code> and <code>‹producer›</code> are
       evaluated in an unspecified order.  It is an error if the
-      value <var>i</var> of <code>⟨index⟩</code> is not an exact
+      value <var>i</var> of <code>‹index›</code> is not an exact
       non-negative index.  The <em>i</em>th element of the list
-      consisting of the single values of the <code>⟨operands⟩</code>s
-      and the multiple values of <code>⟨producer⟩</code> is then
+      consisting of the single values of the <code>‹operands›</code>s
+      and the multiple values of <code>‹producer›</code> is then
       returned.  It is an error if there is no such element.
     </p>
 
@@ -212,13 +250,13 @@
     <pre>
     (value/mv 1 'a (values 'b 'c))   ⟹ b</pre>
 
-    <p><code>(arity ⟨producer⟩)</code></p>
+    <p><code>(arity ‹producer›)</code></p>
 
-    <p><i>Syntax:</i> <code>⟨Producer⟩</code> can be any
+    <p><i>Syntax:</i> <code>‹Producer›</code> can be any
     expression.</p>
 
     <p><i>Semantics:</i> An <code>arity</code> expression is
-    evaluated as follows: <code>⟨Producer⟩</code> is evaluated and
+    evaluated as follows: <code>‹Producer›</code> is evaluated and
     then the number of resulting values is returned.</p>
 
     <p>The <code>arity</code> syntax could be defined by</p>
@@ -227,23 +265,23 @@
     (define-syntax arity
       (syntax-rules ()
         ((arity producer)
-         (let-values ((res (producer)))
+         (let-values ((res producer))
            (length res)))))</pre>
 
     <pre>
     (arity (values 'a 'b 'c))   ⟹ 3</pre>
 
-    <p><code>(set!-values ⟨formals⟩ ⟨producer⟩)</code></p>
+    <p><code>(set!-values ‹formals› ‹producer›)</code></p>
 
-    <p><i>Syntax:</i> <code>⟨formals⟩</code> is a formal arguments list
-      and <code>⟨producer⟩</code> can be any expression.</p>
+    <p><i>Syntax:</i> <code>‹formals›</code> is a formal arguments list
+      and <code>‹producer›</code> can be any expression.</p>
 
     <p><i>Semantics:</i> A <code>set!-values</code> expression is
-      evaluated as follows: <code>⟨Producer⟩</code> is evaluated and the
+      evaluated as follows: <code>‹Producer›</code> is evaluated and the
       resulting values are stored in the locations to which the
-      variables of the <code>⟨formals⟩</code> are bound, where
-      the <code>⟨formals⟩</code> are matched to the resulting values in
-      the same way that the <code>⟨formals⟩</code> in
+      variables of the <code>‹formals›</code> are bound, where
+      the <code>‹formals›</code> are matched to the resulting values in
+      the same way that the <code>‹formals›</code> in
       a <code>lambda</code> expression are matched to the arguments in
       a procedure call.  The result of the <code>set!-values</code>
       expression is unspecified.
@@ -255,23 +293,23 @@
     (define-syntax set!-values
       (syntax-rules ()
         ((set!-values (var1 ...) producer)
-         (let-syntax
-             ((aux (syntax-rules ()
-                     ((aux () ((var1 temp1) ...) producer)
-                      (let-values (((temp1 ... . temp*) producer))
-                        (set! var1 temp1) ...))
-                     ((aux (var1 var2 ...) (temp ...) producer)
-                      (aux (var2 ...) (temp ... (var1 temp1)) producer)))))
-           (aux (var1 ... var*) () producer)))
+         (letrec-syntax
+             ((aux (syntax-rules ::: ()
+                     ((aux () ((%var1 temp1) :::) %producer)
+                      (let-values (((temp1 ::: . temp*) %producer))
+                        (set! %var1 temp1) :::))
+                     ((aux (%var1 var2 :::) (temp :::) %producer)
+                      (aux (var2 :::) (temp ::: (%var1 temp1)) %producer)))))
+           (aux (var1 ... ) () producer)))
         ((set!-values (var1 ... . var*) producer)
-         (let-syntax
-             ((aux (syntax-rules ()
-                     ((aux () ((var1 temp1) ... (var* temp*)) producer)
-                      (let-values (((temp1 ... . temp*) producer))
-                        (set! var1 temp1) ...
-                        (set! var* temp*)))
-                     ((aux (var1 var2 ...) (temp ...) producer)
-                      (aux (var2 ...) (temp ... (var1 temp1)) producer)))))
+         (letrec-syntax
+             ((aux (syntax-rules ::: ()
+                     ((aux () ((%var1 temp1) ::: (%var* temp*)) %producer)
+                      (let-values (((temp1 ::: . temp*) %producer))
+                        (set! %var1 temp1) :::
+                        (set! %var* temp*)))
+                     ((aux (%var1 var2 :::) (temp :::) %producer)
+                      (aux (var2 :::) (temp ::: (%var1 temp1)) %producer)))))
            (aux (var1 ... var*) () producer)))
         ((set!-values var* producer)
          (let-values ((temp*) producer)
@@ -282,17 +320,17 @@
       (set!-values (x . y) (values 'a 'b))
       (list x y))                            ⟹ (a (b))</pre>
 
-    <p><code>(with-values ⟨producer⟩ ⟨consumer⟩)</code></p>
+    <p><code>(with-values ‹producer› ‹consumer›)</code></p>
 
-    <p><i>Syntax:</i> <code>⟨Producer⟩</code>
-    and <code>⟨consumer⟩</code> can be any expressions.</p>
+    <p><i>Syntax:</i> <code>‹Producer›</code>
+    and <code>‹consumer›</code> can be any expressions.</p>
 
     <p><i>Semantics:</i> A <code>with-values</code> expression is
-    evaluated as follows: <code>⟨Producer⟩</code>
-    and <code>⟨consumer⟩</code> are evaluated in an unspecified order.
-    The procedure resulting from evaluating <code>⟨consumer⟩</code> is
+    evaluated as follows: <code>‹Producer›</code>
+    and <code>‹consumer›</code> are evaluated in an unspecified order.
+    The procedure resulting from evaluating <code>‹consumer›</code> is
     then tail-called with the multiple values
-    of <code>⟨producer⟩</code> as the actual arguments, and its return
+    of <code>‹producer›</code> as the actual arguments, and its return
     values are returned.</p>
 
     <p>The <code>with-values</code> syntax could be defined by</p>
@@ -307,22 +345,22 @@
     (with-values (values 4 5)
       (lambda (a b) b))         ⟹ 5</pre>
 
-    <p><code>(case-receive ⟨Producer⟩ (clause …)</code></p>
+    <p><code>(case-receive ‹producer› (clause …)</code></p>
 
-    <p><i>Syntax:</i> <code>⟨producer⟩</code> can be any expression
-      and each <code>⟨clause⟩</code> is of the form <code>(⟨formals⟩
-      ⟨body⟩)</code> as in a <code>case-lambda</code> expression.
+    <p><i>Syntax:</i> <code>‹producer›</code> can be any expression
+      and each <code>‹clause›</code> is of the form <code>(‹formals›
+      ‹body›)</code> as in a <code>case-lambda</code> expression.
     </p>
 
     <p><i>Semantics:</i> A <code>case-receive</code> expression is
-      evaluated as follows: <code>⟨Producer⟩</code> is evaluated and
+      evaluated as follows: <code>‹Producer›</code> is evaluated and
       then the first clause for which the resulting values agree with
-      <code>⟨formals⟩</code> is selected, where agreement is specified
-      as for the <code>⟨formals⟩</code> of a <code>lambda</code>
-      expression.  The variables of <code>⟨formals⟩</code> are bound
+      <code>‹formals›</code> is selected, where agreement is specified
+      as for the <code>‹formals›</code> of a <code>lambda</code>
+      expression.  The variables of <code>‹formals›</code> are bound
       to fresh locations, the values are stored in those locations,
-      the <code>⟨body⟩</code> is evaluated in the extended
-      environment, and the results of <code>⟨body⟩</code> are returned
+      the <code>‹body›</code> is evaluated in the extended
+      environment, and the results of <code>‹body›</code> are returned
       as the results of the <code>case-receive</code> expression.</p>
 
     <p>The <code>case-receive</code> syntax could be defined by</p>
@@ -408,6 +446,12 @@
       this SRFI.  I would like to thank all participants of this
       discussion for their contributions.
     </p>
+
+    <p>John Cowan suggested to add the equivalent of Common Lisp's
+      procedure <code>multiple-value-call</code>.
+    </p>
+
+    <p>Jim Rees read the example code in the first draft carefully.</p>
 
     <h2 id="copyright">Copyright</h2>
     <p>&copy; 2020 Marc Nieper-Wißkirchen.</p>
