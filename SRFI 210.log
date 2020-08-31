@@ -1,0 +1,64 @@
+%%%% Starting test SRFI 210
+Group begin: SRFI 210
+Test begin:
+Test end:
+  result-kind: pass
+  actual-value: "abc"
+  expected-value: "abc"
+Test begin:
+Test end:
+  result-kind: pass
+  actual-value: "abcd"
+  expected-value: "abcd"
+Test begin:
+Test end:
+  result-kind: pass
+  actual-value: (a b c)
+  expected-value: (a b c)
+Test begin:
+Test end:
+  result-kind: pass
+  actual-value: #(a b c)
+  expected-value: #(a b c)
+Test begin:
+Test end:
+  result-kind: pass
+  actual-value: b
+  expected-value: b
+Test begin:
+Test end:
+  result-kind: pass
+  actual-value: 3
+  expected-value: 3
+Test begin:
+Test end:
+  result-kind: pass
+  actual-value: (a (b))
+  expected-value: (a (b))
+Test begin:
+Test end:
+  result-kind: pass
+  actual-value: 5
+  expected-value: 5
+Test begin:
+Test end:
+  result-kind: pass
+  actual-value: (a (b))
+  expected-value: (a (b))
+Test begin:
+Test end:
+  result-kind: pass
+  actual-value: (a b c)
+  expected-value: (a b c)
+Test begin:
+Test end:
+  result-kind: pass
+  actual-value: (a b c)
+  expected-value: (a b c)
+Test begin:
+Test end:
+  result-kind: pass
+  actual-value: b
+  expected-value: b
+Group end: SRFI 210
+# of expected passes      12
