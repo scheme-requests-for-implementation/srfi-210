@@ -372,7 +372,7 @@
     (with-values (values 4 5)
       (lambda (a b) b))         ⟹ 5</pre>
 
-    <p><code>(case-receive ‹producer› (clause …)</code></p>
+    <p><code>(case-receive ‹producer› (clause …))</code></p>
 
     <p><i>Syntax:</i> <code>‹producer›</code> can be any expression
       and each <code>‹clause›</code> is of the form <code>(‹formals›
@@ -403,6 +403,36 @@
     (case-receive (values 'a 'b)
       ((x) #f)
       ((x . y) (list x y)))        ⟹ (a (b))</pre>
+
+    <p><code>(bind/mv ‹producer› ‹transducer<sub>1</sub>› …)</code></p>
+
+    <p><i>Syntax:</i> <code>‹Producer›</code> and
+      the <code>‹transducers›</code> can be any expressions.</p>
+
+    <p><i>Semantics:</i> A <code>bind/mv</code> expression is
+      evaluated as follows: <code>‹Producer›</code> and
+      the <code>‹transducers›</code> are evaluated in an unspecified
+      order.  The procedure resulting from
+      evaluating <code>‹transducer<sub>1</sub>›</code>is then applied
+      to the values resulting from
+      evaluating <code>‹producer›</code>. The resulting values are
+      then applied to <code>‹transducer<sub>2</sub>›</code>, and so on
+      until the final <code>‹transducer›</code> is tail-called and the
+      resulting values are returned as the result of
+      the <code>bind/mv</code> expression.</p>
+
+    <p>The <code>bind/mv</code> syntax could be defined by</p>
+
+    <pre>
+    (define-syntax bind/mv
+      (syntax-rules ()
+        ((bind/mv producer transducer ...)
+         (bind/list (list/mv producer) transducer ...))))</pre>
+
+    <pre>
+    (bind/mv (values 1 2 3)
+             (map-values (lambda (x) (* 2 x)))
+             (map-values (lambda (x) (+ 1 x))))   ⟹ 3 5 7</pre>
 
     <h3>Procedures</h3>
 
@@ -516,8 +546,8 @@
 
     <p><code>(map-values <var>proc</var>)</code></p>
 
-    <p>It is an error if <code><var>proc</var></code> does not
-    evaluate to a procedure.</p>
+    <p>It is an error if <code><var>proc</var></code> is not a
+    procedure.</p>
 
     <p>The <code>map-values</code> procedure returns a procedure that
     accepts an arbitrary number of arguments,
@@ -532,6 +562,70 @@
 
     <pre>
     ((map-values odd?) 1 2 3))   ⟹ #t #f #t</pre>
+
+    <p>(bind/list <var>list</var> <var>transducer<sub>1</sub></var> …)</p>
+
+    <p>It is an error if <code><var>list</var></code> is not a list
+      and the <code><var>transducers</var></code> are no
+      procedures.</p>
+
+    <p>The <code>bind</code> procedure applies
+      the elements of <code><var>list</var></code>
+      to <code><var>transducer<sub>1</sub></var></code>, whose results
+      are then applied
+      to <code><var>transducer<sub>2</sub></var></code>, and so on until
+      the final <code><var>tranducer</var></code> is tail-called and the
+      resulting values are returned.  It could be defined by</p>
+
+    <pre>
+    (define (bind/list lis . transducers)
+      (list-values (fold (lambda (transducer lis)
+                           (list/mv (apply transducer lis)))
+                         lis transducers)))</pre>
+
+    <pre>
+    (bind/list '(1 2 3) (map-values (lambda (x) (* 3 x))))   ⟹ 3 6 9</pre>
+
+    <p>(bind/box <var>box</var> <var>transducer<sub>1</sub></var> …)</p>
+
+    <p>It is an error if <code><var>box</var></code> is not a box
+      and the <code><var>transducers</var></code> are no
+      procedures.</p>
+
+    <p>The <code>bind</code> procedure applies the values of
+      <code><var>box</var></code>
+      to <code><var>transducer<sub>1</sub></var></code>, whose results
+      are then applied
+      to <code><var>transducer<sub>2</sub></var></code>, and so on until
+      the final <code><var>tranducer</var></code> is tail-called and the
+      resulting values are returned.  It could be defined by</p>
+
+    <pre>
+    (define (bind/box bx . transducers)
+      (apply bind/list (list/mv (unbox bx)) transducers))</pre>
+
+    <pre>
+    (bind/box (box 1 2 3) (map-values (lambda (x) (* 3 x))))   ⟹ 3 6 9</pre>
+
+    <p>(bind <var>obj</var> <var>transducer<sub>1</sub></var> …)</p>
+
+    <p>It is an error if the <code><var>transducers</var></code> are
+      no procedures.</p>
+
+    <p>The <code>bind</code> procedure applies
+      the <code><var>obj</var></code>
+      to <code><var>transducer<sub>1</sub></var></code>, whose results
+      are then applied
+      to <code><var>transducer<sub>2</sub></var></code>, and so on until
+      the final <code><var>tranducer</var></code> is tail-called and the
+      resulting values are returned.  It could be defined by</p>
+
+    <pre>
+    (define (bind obj . transducers)
+      (apply bind/list (list obj) transducers))</pre>
+
+    <pre>
+    (bind 1 (lambda (x) (values (* 3 x) (+ 1 x))))   ⟹ 3 2</pre>
 
     <h2 id="implementation">Implementation</h2>
 

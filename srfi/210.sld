@@ -32,14 +32,19 @@
           set!-values
           with-values
           case-receive
+          bind/mv
           list-values
           vector-values
           box-values
           value
           identity
           compose
-          map-values)
+          map-values
+          bind/list
+          bind/box
+          bind)
   (import (scheme base)
           (scheme case-lambda)
+          (scheme list)
           (srfi 195))
   (include "210.scm"))

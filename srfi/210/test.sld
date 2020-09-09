@@ -65,6 +65,10 @@
           ((x) #f)
           ((x . y) (list x y))))
 
+      (test-values (3 5 7) (bind/mv (values 1 2 3)
+                                    (map-values (lambda (x) (* 2 x)))
+                                    (map-values (lambda (x) (+ 1 x)))))
+
       (test-values ('a 'b 'c)
         (list-values '(a b c)))
 
@@ -84,5 +88,14 @@
           ((compose f g) 1 2 3)))
 
       (test-values (#t #f #t) ((map-values odd?) 1 2 3))
+
+      (test-values (3 6 9)
+        (bind/list '(1 2 3) (map-values (lambda (x) (* 3 x)))))
+
+      (test-values (3 6 9)
+        (bind/box (box 1 2 3) (map-values (lambda (x) (* 3 x)))))
+
+      (test-values (3 2)
+        (bind 1 (lambda (x) (values (* 3 x) (+ 1 x)))))
 
       (test-end))))

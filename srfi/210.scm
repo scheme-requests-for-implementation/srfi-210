@@ -115,6 +115,11 @@
      (with-values producer
        (case-lambda clause ...)))))
 
+(define-syntax bind/mv
+  (syntax-rules ()
+    ((bind/mv producer transducer ...)
+     (bind/list (list/mv producer) transducer ...))))
+
 ;;;;;;;;;;;;;;;;
 ;; Procedures ;;
 ;;;;;;;;;;;;;;;;
@@ -146,3 +151,14 @@
 (define (map-values proc)
   (lambda args
     (list-values (map proc args))))
+
+(define (bind/list lis . transducers)
+  (list-values (fold (lambda (transducer lis)
+                       (list/mv (apply transducer lis)))
+                     lis transducers)))
+
+(define (bind/box bx . transducers)
+  (apply bind/list (list/mv (unbox bx)) transducers))
+
+(define (bind obj . transducers)
+  (apply bind/list (list obj) transducers))
