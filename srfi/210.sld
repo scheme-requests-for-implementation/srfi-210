@@ -26,14 +26,25 @@
           call/mv
           list/mv
           vector/mv
+          box/mv
           value/mv
           arity
           set!-values
           with-values
           case-receive
+          bind/mv
           list-values
           vector-values
-          value)
+          box-values
+          value
+          identity
+          compose
+          map-values
+          bind/list
+          bind/box
+          bind)
   (import (scheme base)
-          (scheme case-lambda))
+          (scheme case-lambda)
+          (scheme list)
+          (srfi 195))
   (include "210.scm"))

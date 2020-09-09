@@ -63,6 +63,11 @@
     ((vector/mv element1 ... producer)
      (apply/mv vector element1 ... producer))))
 
+(define-syntax box/mv
+  (syntax-rules ()
+    ((box/mv element1 ... producer)
+     (apply/mv box element1 ... producer))))
+
 (define-syntax value/mv
   (syntax-rules ()
     ((value/mv index operand1 ... producer)
@@ -110,6 +115,11 @@
      (with-values producer
        (case-lambda clause ...)))))
 
+(define-syntax bind/mv
+  (syntax-rules ()
+    ((bind/mv producer transducer ...)
+     (bind/list (list/mv producer) transducer ...))))
+
 ;;;;;;;;;;;;;;;;
 ;; Procedures ;;
 ;;;;;;;;;;;;;;;;
@@ -120,5 +130,35 @@
 (define (vector-values vec)
   (list-values (vector->list vec)))
 
+(define box-values unbox)
+
 (define (value k . objs)
   (list-ref objs k))
+
+(define identity values)
+
+(define compose
+  (case-lambda
+    (() identity)
+    ((transducer . transducers)
+     (let f ((transducer transducer) (transducers transducers))
+       (if (null? transducers)
+           transducer
+           (let ((composition (f (car transducers) (cdr transducers))))
+             (lambda args
+               (apply/mv composition (apply transducer args)))))))))
+
+(define (map-values proc)
+  (lambda args
+    (list-values (map proc args))))
+
+(define (bind/list lis . transducers)
+  (list-values (fold (lambda (transducer lis)
+                       (list/mv (apply transducer lis)))
+                     lis transducers)))
+
+(define (bind/box bx . transducers)
+  (apply bind/list (list/mv (unbox bx)) transducers))
+
+(define (bind obj . transducers)
+  (apply bind/list (list obj) transducers))
