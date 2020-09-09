@@ -471,6 +471,68 @@
     <pre>
     (value 1 'a 'b 'c)   ⟹ b</pre>
 
+    <p><code>(identity <var>obj<sub>1</sub></var> …)</code></p>
+
+    <p>The <code>identity</code> procedure yields the
+      objects <code><var>objs</var></code> as multiple values.
+      Equivalent to <code>values</code>.  It could
+      be defined by</p>
+
+    <pre>
+      (define identity values)</pre>
+
+    <pre>
+    (identity 1 2 3)   ⟹ 1 2 3</pre>
+
+    <p><code>(compose <var>transducer<sub>1</sub> …)</code></p>
+
+    <p>It is an error if the <code><var>transducers</var></code>
+    are not procedures.</p>
+
+    <p>The <code>compose</code> procedure yields the functional
+      composition of the <code><var>transducers</var></code>.  When
+      the resulting procedure is applied to arguments, these arguments
+      are applied to <code><var>transducer<sub>1</sub></var></code>,
+      whose results are applied
+      to <code><var>transducer<sub>2</sub></var></code>, and so on
+      until the final results are returned.  It could be defined by</p>
+
+    <pre>
+    (define compose
+      (case-lambda
+        (() identity)
+        ((transducer . transducers)
+         (let f ((transducer transducer) (transducers transducers))
+           (if (null? transducers)
+               transducer
+               (let ((composition (f (car transducers) (cdr transducers))))
+                 (lambda args
+                   (apply/mv composition (apply transducer args)))))))))</pre>
+
+    <pre>
+    (let ((f (map-values (lambda (x) (* 2 x))))
+          (g (map-values (lambda (x) (+ x 1)))))
+       ((compose f g) 1 2 3)))                     ⟹ 3 5 7</pre>
+
+    <p><code>(map-values <var>proc</var>)</code></p>
+
+    <p>It is an error if <code><var>proc</var></code> does not
+    evaluate to a procedure.</p>
+
+    <p>The <code>map-values</code> procedure returns a procedure that
+    accepts an arbitrary number of arguments,
+    applies <code><var>proc</var></code> to each of them in an
+    unspecified order and returns the resulting single values as
+    multiple values.  It could be defined by</p>
+
+    <pre>
+    (define (map-values proc)
+      (lambda args
+        (list-values (map proc args))))</pre>
+
+    <pre>
+    ((map-values odd?) 1 2 3))   ⟹ #t #f #t</pre>
+
     <h2 id="implementation">Implementation</h2>
 
     <p>A

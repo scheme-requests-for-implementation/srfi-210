@@ -35,7 +35,10 @@
           list-values
           vector-values
           box-values
-          value)
+          value
+          identity
+          compose
+          map-values)
   (import (scheme base)
           (scheme case-lambda)
           (srfi 195))
