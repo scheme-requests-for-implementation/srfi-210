@@ -23,6 +23,11 @@ Test end:
 Test begin:
 Test end:
   result-kind: pass
+  actual-value: (a b c)
+  expected-value: (a b c)
+Test begin:
+Test end:
+  result-kind: pass
   actual-value: b
   expected-value: b
 Test begin:
@@ -58,7 +63,12 @@ Test end:
 Test begin:
 Test end:
   result-kind: pass
+  actual-value: (a b c)
+  expected-value: (a b c)
+Test begin:
+Test end:
+  result-kind: pass
   actual-value: b
   expected-value: b
 Group end: SRFI 210
-# of expected passes      12
+# of expected passes      14

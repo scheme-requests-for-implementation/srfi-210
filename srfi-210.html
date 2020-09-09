@@ -223,6 +223,32 @@
     <pre>
     (vector/mv 'a (values 'b 'c))   ⟹ #(a b c)</pre>
 
+    <p><code>(box/mv ‹element<sub>1</sub>›… ‹producer›)</code></p>
+
+    <p><i>Syntax:</i> Each <code>‹element›</code> and <code>
+     ‹producer›</code> can be any expression.</p>
+
+    <p><i>Semantics:</i> A <code>box/mv</code> expression is evaluated
+      as follows: Each <code>‹element›</code>
+      and <code>‹producer›</code> are evaluated in an unspecified
+      order.  A
+      (<a href="https://srfi.schemers.org/srfi-195/srfi-195.html">SRFI
+      195</a>) box is constructed from the single values of
+      the <code>‹elements›</code>s and the multiple values
+      of <code>‹producer›</code> is then returned.
+    </p>
+
+    <p>The <code>box/mv</code> syntax could be defined by</p>
+
+    <pre>
+    (define-syntax box/mv
+      (syntax-rules ()
+        ((box/mv element1 ... producer)
+         (apply/mv box element1 ... producer))))</pre>
+
+    <pre>
+    (unbox (box/mv 'a (values 'b 'c)))   ⟹ a b c</pre>
+
     <p><code>(value/mv ‹index› ‹operand<sub>1</sub>› … ‹producer›)</code></p>
 
     <p><i>Syntax:</i> <code>‹Index›</code>,
@@ -402,7 +428,7 @@
     <p>It is an error if <code><var>vec</var></code> is not a vector.</p>
 
     <p>
-      The <code>vector-values</code>procedure yields the elements
+      The <code>vector-values</code> procedure yields the elements
       of <code><var>vec</var></code> as multiple values. It could be
       defined by
     </p>
@@ -413,6 +439,22 @@
 
     <pre>
     (vector-values #(a b c))   ⟹ a b c</pre>
+
+    <p><code>(box-values <var>box</var>)</code></p>
+
+    <p>It is an error if <code><var>box</var></code> is not a box.</p>
+
+    <p>
+      The <code>box-values</code> procedure yields the elements
+      of <code><var>box</var></code> as multiple values.  Equivalent to <code>unbox</code>.
+      It could be defined by
+    </p>
+
+    <pre>
+    (define box-values unbox)</pre>
+
+    <pre>
+    (box-values (box 'a 'b 'c))   ⟹ a b c</pre>
 
     <p><code>(value <var>index</var> <var>obj<sub>0</sub></var> … <var>obj<sub>n-1</sub></var>)</code></p>
 
@@ -444,7 +486,7 @@
     <h2 id="acknowledgements">Acknowledgements</h2>
 
     <p>
-      A discussion on the <a href="https://srfi.schemers.org/srfi-195/srfi-195.html">SRFI 195</a> mailing list eventually led to
+      A discussion on the <a href="https://srfi-email.schemers.org/srfi-195">SRFI 195</a> mailing list eventually led to
       this SRFI.  I would like to thank all participants of this
       discussion for their contributions.
     </p>

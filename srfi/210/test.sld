@@ -24,7 +24,8 @@
   (export run-tests)
   (import (scheme base)
           (srfi 210)
-          (srfi 64))
+          (srfi 64)
+          (srfi 195))
   (begin
     (define-syntax test-values
       (syntax-rules ()
@@ -43,6 +44,8 @@
       (test-equal '(a b c) (list/mv 'a (values 'b 'c)))
 
       (test-equal #(a b c) (vector/mv 'a (values 'b 'c)))
+
+      (test-values ('a 'b 'c) (unbox (box/mv 'a (values 'b 'c))))
 
       (test-equal 'b (value/mv 1 'a (values 'b 'c)))
 
@@ -67,6 +70,9 @@
 
       (test-values ('a 'b 'c)
         (vector-values #(a b c)))
+
+      (test-values ('a 'b 'c)
+        (box-values (box 'a 'b 'c)))
 
       (test-equal 'b (value 1 'a 'b 'c))
 

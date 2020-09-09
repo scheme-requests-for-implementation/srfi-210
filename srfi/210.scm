@@ -63,6 +63,11 @@
     ((vector/mv element1 ... producer)
      (apply/mv vector element1 ... producer))))
 
+(define-syntax box/mv
+  (syntax-rules ()
+    ((box/mv element1 ... producer)
+     (apply/mv box element1 ... producer))))
+
 (define-syntax value/mv
   (syntax-rules ()
     ((value/mv index operand1 ... producer)
@@ -119,6 +124,8 @@
 
 (define (vector-values vec)
   (list-values (vector->list vec)))
+
+(define box-values unbox)
 
 (define (value k . objs)
   (list-ref objs k))
