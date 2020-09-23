@@ -7,7 +7,26 @@
     <link rel="stylesheet" href="https://srfi.schemers.org/srfi.css"
           type="text/css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>pre { font-size: 0.8em; }</style></head>
+    <style>
+      body
+      {
+          font-family: serif;
+      }
+      span.token
+      {
+          font-family: serif;
+      }
+      span.token::before
+      {
+          content: "〈";
+      }
+      span.token::after
+      {
+          content: "〉";
+      }
+      pre { font-size: 0.8em; }
+    </style>
+  </head>
   <body>
     <h1><a href="https://srfi.schemers.org/"><img class="srfi-logo" src="https://srfi.schemers.org/srfi-logo.svg" alt="SRFI logo" /></a>210: Procedures and Syntax for Multiple Values</h1>
 
@@ -97,21 +116,25 @@
 
     <h2 id="specification">Specification</h2>
 
+    <p>When this specification talks about <em>boxes</em>, it refers
+      to the disjoint Scheme type described by SRFI 111 (single valued)
+      and SRFI 195 (multiple-valued).</p>
+
     <h3>Syntax</h3>
 
-    <p><code>(apply/mv ‹operator› ‹operand<sub>1</sub>›… ‹producer›)</code></p>
+    <p><code>(apply/mv <span class="token">operator</span> <span class="token">operand<sub>1</sub></span> &hellip; <span class="token">producer</span>)</code></p>
 
-    <p><i>Syntax:</i> <code>‹Operator›</code>,
-    each <code>‹operand›</code>, and <code>‹producer›</code> can be
+    <p><i>Syntax:</i> <code><span class="token">Operator</span></code>,
+    each <code><span class="token">operand</span></code>, and <code><span class="token">producer</span></code> can be
     any expression.</p>
 
     <p><i>Semantics:</i> An <code>apply/mv</code> expression is
-    evaluated as follows: <code>‹Operator›</code>,
-    each <code>‹operand›</code>, and <code>‹producer›</code> are
+    evaluated as follows: <code><span class="token">Operator</span></code>,
+    each <code><span class="token">operand</span></code>, and <code><span class="token">producer</span></code> are
     evaluated in an unspecified order.  The procedure resulting from
-    evaluating <code>‹operator›</code> is then tail-called with the
-    single values of the <code>‹operand›</code>s and the multiple
-    values of <code>‹producer›</code> as the actual arguments.  The
+    evaluating <code><span class="token">operator</span></code> is then tail-called with the
+    single values of the <code><span class="token">operand</span></code>s and the multiple
+    values of <code><span class="token">producer</span></code> as the actual arguments.  The
     values returned by the procedure are returned.
     </p>
 
@@ -137,19 +160,19 @@
       specifying the order in which the values are evaluated.</p>
 
     <pre>
-    (apply/mv string #\a (values #\b #\c))   ⟹ "abc"</pre>
+    (apply/mv string #\a (values #\b #\c))   &xrArr; "abc"</pre>
 
-    <p><code>(call/mv ‹consumer› ‹producer<sub>1</sub>›…)</code></p>
+    <p><code>(call/mv <span class="token">consumer</span> <span class="token">producer<sub>1</sub></span> &hellip;)</code></p>
 
-    <p><i>Syntax:</i> <code>‹Consumer›</code> and each <code>‹producer›</code> can be
+    <p><i>Syntax:</i> <code><span class="token">Consumer</span></code> and each <code><span class="token">producer</span></code> can be
     any expression.</p>
 
     <p><i>Semantics:</i> An <code>call/mv</code> expression is
-    evaluated as follows: <code>‹Consumer›</code> and
-    each <code>‹producer›</code> are evaluated in an unspecified
+    evaluated as follows: <code><span class="token">Consumer</span></code> and
+    each <code><span class="token">producer</span></code> are evaluated in an unspecified
     order.  The procedure resulting from
-    evaluating <code>‹consumer›</code> is then tail-called with the
-    mutiple values of the <code>‹producers›</code>s in that order as
+    evaluating <code><span class="token">consumer</span></code> is then tail-called with the
+    mutiple values of the <code><span class="token">producers</span></code>s in that order as
     the actual arguments.  The values returned by the procedure are
     returned.
     </p>
@@ -174,19 +197,19 @@
            (aux consumer (producer1 ...) ())))))</pre>
 
     <pre>
-    (call/mv string (values #\a #\b) (values #\c #\d))   ⟹ "abcd"</pre>
+    (call/mv string (values #\a #\b) (values #\c #\d))   &xrArr; "abcd"</pre>
 
-    <p><code>(list/mv ‹element<sub>1</sub>›… ‹producer›)</code></p>
+    <p><code>(list/mv <span class="token">element<sub>1</sub></span> &hellip; <span class="token">producer</span>)</code></p>
 
-    <p><i>Syntax:</i> Each <code>‹element›</code> and <code>
-     ‹producer›</code> can be any expression.</p>
+    <p><i>Syntax:</i> Each <code><span class="token">element</span></code> and <code>
+     <span class="token">producer</span></code> can be any expression.</p>
 
     <p><i>Semantics:</i> A <code>list/mv</code> expression is
-      evaluated as follows: Each <code>‹element›</code>
-      and <code>‹producer›</code> are evaluated in an unspecified
+      evaluated as follows: Each <code><span class="token">element</span></code>
+      and <code><span class="token">producer</span></code> are evaluated in an unspecified
       order.  A list constructed from the
-      single values of the <code>‹elements›</code>s and the multiple
-      values of <code>‹producer›</code> is then returned.
+      single values of the <code><span class="token">elements</span></code>s and the multiple
+      values of <code><span class="token">producer</span></code> is then returned.
     </p>
 
     <p>The <code>list/mv</code> syntax could be defined by</p>
@@ -198,19 +221,19 @@
          (apply/mv list element1 ... producer))))</pre>
 
     <pre>
-    (list/mv 'a (values 'b 'c))   ⟹ (a b c)</pre>
+    (list/mv 'a (values 'b 'c))   &xrArr; (a b c)</pre>
 
-    <p><code>(vector/mv ‹element<sub>1</sub>›… ‹producer›)</code></p>
+    <p><code>(vector/mv <span class="token">element<sub>1</sub></span> &hellip; <span class="token">producer</span>)</code></p>
 
-    <p><i>Syntax:</i> Each <code>‹element›</code> and <code>
-     ‹producer›</code> can be any expression.</p>
+    <p><i>Syntax:</i> Each <code><span class="token">element</span></code> and <code>
+     <span class="token">producer</span></code> can be any expression.</p>
 
     <p><i>Semantics:</i> A <code>vector/mv</code> expression is
-      evaluated as follows: Each <code>‹element›</code>
-      and <code>‹producer›</code> are evaluated in an unspecified
+      evaluated as follows: Each <code><span class="token">element</span></code>
+      and <code><span class="token">producer</span></code> are evaluated in an unspecified
       order.  A vector constructed from the
-      single values of the <code>‹elements›</code>s and the multiple
-      values of <code>‹producer›</code> is then returned.
+      single values of the <code><span class="token">elements</span></code>s and the multiple
+      values of <code><span class="token">producer</span></code> is then returned.
     </p>
 
     <p>The <code>vector/mv</code> syntax could be defined by</p>
@@ -222,21 +245,21 @@
          (apply/mv vector element1 ... producer))))</pre>
 
     <pre>
-    (vector/mv 'a (values 'b 'c))   ⟹ #(a b c)</pre>
+    (vector/mv 'a (values 'b 'c))   &xrArr; #(a b c)</pre>
 
-    <p><code>(box/mv ‹element<sub>1</sub>›… ‹producer›)</code></p>
+    <p><code>(box/mv <span class="token">element<sub>1</sub></span> &hellip; <span class="token">producer</span>)</code></p>
 
-    <p><i>Syntax:</i> Each <code>‹element›</code> and <code>
-     ‹producer›</code> can be any expression.</p>
+    <p><i>Syntax:</i> Each <code><span class="token">element</span></code> and <code>
+     <span class="token">producer</span></code> can be any expression.</p>
 
     <p><i>Semantics:</i> A <code>box/mv</code> expression is evaluated
-      as follows: Each <code>‹element›</code>
-      and <code>‹producer›</code> are evaluated in an unspecified
+      as follows: Each <code><span class="token">element</span></code>
+      and <code><span class="token">producer</span></code> are evaluated in an unspecified
       order.  A
       (<a href="https://srfi.schemers.org/srfi-195/srfi-195.html">SRFI
       195</a>) box is constructed from the single values of
-      the <code>‹elements›</code>s and the multiple values
-      of <code>‹producer›</code> is then returned.
+      the <code><span class="token">elements</span></code>s and the multiple values
+      of <code><span class="token">producer</span></code> is then returned.
     </p>
 
     <p>The <code>box/mv</code> syntax could be defined by</p>
@@ -248,22 +271,22 @@
          (apply/mv box element1 ... producer))))</pre>
 
     <pre>
-    (unbox (box/mv 'a (values 'b 'c)))   ⟹ a b c</pre>
+    (unbox (box/mv 'a (values 'b 'c)))   &xrArr; a b c</pre>
 
-    <p><code>(value/mv ‹index› ‹operand<sub>1</sub>› … ‹producer›)</code></p>
+    <p><code>(value/mv <span class="token">index</span> <span class="token">operand<sub>1</sub></span> &hellip; <span class="token">producer</span>)</code></p>
 
-    <p><i>Syntax:</i> <code>‹Index›</code>,
-     each <code>‹operand›</code>, and <code> ‹producer›</code> can be
+    <p><i>Syntax:</i> <code><span class="token">Index</span></code>,
+     each <code><span class="token">operand</span></code>, and <code> <span class="token">producer</span></code> can be
      any expression.</p>
 
     <p><i>Semantics:</i> A <code>value/mv</code> expression is
-      evaluated as follows: <code>‹Index›</code>,
-      each <code>‹element›</code> and <code>‹producer›</code> are
+      evaluated as follows: <code><span class="token">Index</span></code>,
+      each <code><span class="token">element</span></code> and <code><span class="token">producer</span></code> are
       evaluated in an unspecified order.  It is an error if the
-      value <var>i</var> of <code>‹index›</code> is not an exact
+      value <var>i</var> of <code><span class="token">index</span></code> is not an exact
       non-negative index.  The <em>i</em>th element of the list
-      consisting of the single values of the <code>‹operands›</code>s
-      and the multiple values of <code>‹producer›</code> is then
+      consisting of the single values of the <code><span class="token">operands</span></code>s
+      and the multiple values of <code><span class="token">producer</span></code> is then
       returned.  It is an error if there is no such element.
     </p>
 
@@ -276,15 +299,15 @@
          (apply/mv value index operand1 ... producer))))</pre>
 
     <pre>
-    (value/mv 1 'a (values 'b 'c))   ⟹ b</pre>
+    (value/mv 1 'a (values 'b 'c))   &xrArr; b</pre>
 
-    <p><code>(arity ‹producer›)</code></p>
+    <p><code>(arity <span class="token">producer</span>)</code></p>
 
-    <p><i>Syntax:</i> <code>‹Producer›</code> can be any
+    <p><i>Syntax:</i> <code><span class="token">Producer</span></code> can be any
     expression.</p>
 
     <p><i>Semantics:</i> An <code>arity</code> expression is
-    evaluated as follows: <code>‹Producer›</code> is evaluated and
+    evaluated as follows: <code><span class="token">Producer</span></code> is evaluated and
     then the number of resulting values is returned.</p>
 
     <p>The <code>arity</code> syntax could be defined by</p>
@@ -297,19 +320,19 @@
            (length res)))))</pre>
 
     <pre>
-    (arity (values 'a 'b 'c))   ⟹ 3</pre>
+    (arity (values 'a 'b 'c))   &xrArr; 3</pre>
 
-    <p><code>(set!-values ‹formals› ‹producer›)</code></p>
+    <p><code>(set!-values <span class="token">formals</span> <span class="token">producer</span>)</code></p>
 
-    <p><i>Syntax:</i> <code>‹formals›</code> is a formal arguments list
-      and <code>‹producer›</code> can be any expression.</p>
+    <p><i>Syntax:</i> <code><span class="token">formals</span></code> is a formal arguments list
+      and <code><span class="token">producer</span></code> can be any expression.</p>
 
     <p><i>Semantics:</i> A <code>set!-values</code> expression is
-      evaluated as follows: <code>‹Producer›</code> is evaluated and the
+      evaluated as follows: <code><span class="token">Producer</span></code> is evaluated and the
       resulting values are stored in the locations to which the
-      variables of the <code>‹formals›</code> are bound, where
-      the <code>‹formals›</code> are matched to the resulting values in
-      the same way that the <code>‹formals›</code> in
+      variables of the <code><span class="token">formals</span></code> are bound, where
+      the <code><span class="token">formals</span></code> are matched to the resulting values in
+      the same way that the <code><span class="token">formals</span></code> in
       a <code>lambda</code> expression are matched to the arguments in
       a procedure call.  The result of the <code>set!-values</code>
       expression is unspecified.
@@ -346,19 +369,19 @@
     <pre>
     (let ((x #f) (y #f))
       (set!-values (x . y) (values 'a 'b))
-      (list x y))                            ⟹ (a (b))</pre>
+      (list x y))                            &xrArr; (a (b))</pre>
 
-    <p><code>(with-values ‹producer› ‹consumer›)</code></p>
+    <p><code>(with-values <span class="token">producer</span> <span class="token">consumer</span>)</code></p>
 
-    <p><i>Syntax:</i> <code>‹Producer›</code>
-    and <code>‹consumer›</code> can be any expressions.</p>
+    <p><i>Syntax:</i> <code><span class="token">Producer</span></code>
+    and <code><span class="token">consumer</span></code> can be any expressions.</p>
 
     <p><i>Semantics:</i> A <code>with-values</code> expression is
-    evaluated as follows: <code>‹Producer›</code>
-    and <code>‹consumer›</code> are evaluated in an unspecified order.
-    The procedure resulting from evaluating <code>‹consumer›</code> is
+    evaluated as follows: <code><span class="token">Producer</span></code>
+    and <code><span class="token">consumer</span></code> are evaluated in an unspecified order.
+    The procedure resulting from evaluating <code><span class="token">consumer</span></code> is
     then tail-called with the multiple values
-    of <code>‹producer›</code> as the actual arguments, and its return
+    of <code><span class="token">producer</span></code> as the actual arguments, and its return
     values are returned.</p>
 
     <p>The <code>with-values</code> syntax could be defined by</p>
@@ -371,24 +394,24 @@
 
     <pre>
     (with-values (values 4 5)
-      (lambda (a b) b))         ⟹ 5</pre>
+      (lambda (a b) b))         &xrArr; 5</pre>
 
-    <p><code>(case-receive ‹producer› (clause …))</code></p>
+    <p><code>(case-receive <span class="token">producer</span> <span class="token">clause</span> &hellip;)</code></p>
 
-    <p><i>Syntax:</i> <code>‹producer›</code> can be any expression
-      and each <code>‹clause›</code> is of the form <code>(‹formals›
-      ‹body›)</code> as in a <code>case-lambda</code> expression.
+    <p><i>Syntax:</i> <code><span class="token">producer</span></code> can be any expression
+      and each <code><span class="token">clause</span></code> is of the form <code>(<span class="token">formals</span>
+      <span class="token">body</span>)</code> as in a <code>case-lambda</code> expression.
     </p>
 
     <p><i>Semantics:</i> A <code>case-receive</code> expression is
-      evaluated as follows: <code>‹Producer›</code> is evaluated and
+      evaluated as follows: <code><span class="token">Producer</span></code> is evaluated and
       then the first clause for which the resulting values agree with
-      <code>‹formals›</code> is selected, where agreement is specified
-      as for the <code>‹formals›</code> of a <code>lambda</code>
-      expression.  The variables of <code>‹formals›</code> are bound
+      <code><span class="token">formals</span></code> is selected, where agreement is specified
+      as for the <code><span class="token">formals</span></code> of a <code>lambda</code>
+      expression.  The variables of <code><span class="token">formals</span></code> are bound
       to fresh locations, the values are stored in those locations,
-      the <code>‹body›</code> is evaluated in the extended
-      environment, and the results of <code>‹body›</code> are returned
+      the <code><span class="token">body</span></code> is evaluated in the extended
+      environment, and the results of <code><span class="token">body</span></code> are returned
       as the results of the <code>case-receive</code> expression.</p>
 
     <p>The <code>case-receive</code> syntax could be defined by</p>
@@ -398,27 +421,27 @@
       (syntax-rules ()
         ((case-receive producer clause ...)
          (with-values producer
-           (case-lambda clause ...)))</pre>
+           (case-lambda clause ...)))))</pre>
 
     <pre>
     (case-receive (values 'a 'b)
       ((x) #f)
-      ((x . y) (list x y)))        ⟹ (a (b))</pre>
+      ((x . y) (list x y)))        &xrArr; (a (b))</pre>
 
-    <p><code>(bind/mv ‹producer› ‹transducer<sub>1</sub>› …)</code></p>
+    <p><code>(bind/mv <span class="token">producer</span> <span class="token">transducer<sub>1</sub></span> &hellip;)</code></p>
 
-    <p><i>Syntax:</i> <code>‹Producer›</code> and
-      the <code>‹transducers›</code> can be any expressions.</p>
+    <p><i>Syntax:</i> <code><span class="token">Producer</span></code> and
+      the <code><span class="token">transducers</span></code> can be any expressions.</p>
 
     <p><i>Semantics:</i> A <code>bind/mv</code> expression is
-      evaluated as follows: <code>‹Producer›</code> and
-      the <code>‹transducers›</code> are evaluated in an unspecified
+      evaluated as follows: <code><span class="token">Producer</span></code> and
+      the <code><span class="token">transducers</span></code> are evaluated in an unspecified
       order.  The procedure resulting from
-      evaluating <code>‹transducer<sub>1</sub>›</code>is then applied
+      evaluating <code><span class="token">transducer<sub>1</sub></span></code>is then applied
       to the values resulting from
-      evaluating <code>‹producer›</code>. The resulting values are
-      then applied to <code>‹transducer<sub>2</sub>›</code>, and so on
-      until the final <code>‹transducer›</code> is tail-called and the
+      evaluating <code><span class="token">producer</span></code>. The resulting values are
+      then applied to <code><span class="token">transducer<sub>2</sub></span></code>, and so on
+      until the final <code><span class="token">transducer</span></code> is tail-called and the
       resulting values are returned as the result of
       the <code>bind/mv</code> expression.</p>
 
@@ -433,13 +456,13 @@
     <pre>
     (bind/mv (values 1 2 3)
              (map-values (lambda (x) (* 2 x)))
-             (map-values (lambda (x) (+ 1 x))))   ⟹ 3 5 7</pre>
+             (map-values (lambda (x) (+ 1 x))))   &xrArr; 3 5 7</pre>
 
     <h3>Procedures</h3>
 
     <p><code>(list-values <var>list</var>)</code></p>
 
-    <p>Is is an error if <code><var>list</var></code> is not a list.</p>
+    <p>It is an error if <code><var>list</var></code> is not a list.</p>
 
     <p>
       The <code>list-values</code> procedure yields the elements
@@ -452,7 +475,7 @@
       (apply values lis))</pre>
 
     <pre>
-    (list-values '(a b c))   ⟹ a b c</pre>
+    (list-values '(a b c))   &xrArr; a b c</pre>
 
     <p><code>(vector-values <var>vec</var>)</code></p>
 
@@ -469,7 +492,7 @@
       (list-values (vector-&gt;list vec)))</pre>
 
     <pre>
-    (vector-values #(a b c))   ⟹ a b c</pre>
+    (vector-values #(a b c))   &xrArr; a b c</pre>
 
     <p><code>(box-values <var>box</var>)</code></p>
 
@@ -485,9 +508,9 @@
     (define box-values unbox)</pre>
 
     <pre>
-    (box-values (box 'a 'b 'c))   ⟹ a b c</pre>
+    (box-values (box 'a 'b 'c))   &xrArr; a b c</pre>
 
-    <p><code>(value <var>index</var> <var>obj<sub>0</sub></var> … <var>obj<sub>n-1</sub></var>)</code></p>
+    <p><code>(value <var>index</var> <var>obj<sub>0</sub></var> &hellip; <var>obj<sub>n-1</sub></var>)</code></p>
 
     <p>It is an error if <code><var>index</var></code> is not an exact non-negative
       integer less than <code><var>n</var></code>.</p>
@@ -500,9 +523,9 @@
       (list-ref objs k))</pre>
 
     <pre>
-    (value 1 'a 'b 'c)   ⟹ b</pre>
+    (value 1 'a 'b 'c)   &xrArr; b</pre>
 
-    <p><code>(identity <var>obj<sub>1</sub></var> …)</code></p>
+    <p><code>(identity <var>obj<sub>1</sub></var> &hellip;)</code></p>
 
     <p>The <code>identity</code> procedure yields the
       objects <code><var>objs</var></code> as multiple values.
@@ -513,9 +536,9 @@
       (define identity values)</pre>
 
     <pre>
-    (identity 1 2 3)   ⟹ 1 2 3</pre>
+    (identity 1 2 3)   &xrArr; 1 2 3</pre>
 
-    <p><code>(compose <var>transducer<sub>1</sub></var> …)</code></p>
+    <p><code>(compose <var>transducer<sub>1</sub></var> &hellip;)</code></p>
 
     <p>It is an error if the <code><var>transducers</var></code>
     are not procedures.</p>
@@ -523,8 +546,8 @@
     <p>The <code>compose</code> procedure yields the functional
       composition of the <code><var>transducers</var></code>.  When
       the resulting procedure is applied to arguments, these arguments
-      are applied to <code><var>transducer<sub>1</sub></var></code>,
-      whose results are applied
+      are passed to <code><var>transducer<sub>1</sub></var></code>,
+      whose results are passed
       to <code><var>transducer<sub>2</sub></var></code>, and so on
       until the final results are returned.  It could be defined by</p>
 
@@ -543,7 +566,7 @@
     <pre>
     (let ((f (map-values (lambda (x) (* 2 x))))
           (g (map-values (lambda (x) (+ x 1)))))
-       ((compose f g) 1 2 3)))                     ⟹ 3 5 7</pre>
+       ((compose f g) 1 2 3)))                     &xrArr; 3 5 7</pre>
 
     <p><code>(map-values <var>proc</var>)</code></p>
 
@@ -562,12 +585,12 @@
         (list-values (map proc args))))</pre>
 
     <pre>
-    ((map-values odd?) 1 2 3))   ⟹ #t #f #t</pre>
+    ((map-values odd?) 1 2 3))   &xrArr; #t #f #t</pre>
 
-    <p>(bind/list <var>list</var> <var>transducer<sub>1</sub></var> …)</p>
+    <p>(bind/list <var>list</var> <var>transducer<sub>1</sub></var> &hellip;)</p>
 
     <p>It is an error if <code><var>list</var></code> is not a list
-      and the <code><var>transducers</var></code> are no
+      and the <code><var>transducers</var></code> are not
       procedures.</p>
 
     <p>The <code>bind</code> procedure applies
@@ -575,7 +598,7 @@
       to <code><var>transducer<sub>1</sub></var></code>, whose results
       are then applied
       to <code><var>transducer<sub>2</sub></var></code>, and so on until
-      the final <code><var>tranducer</var></code> is tail-called and the
+      the final <code><var>transducer</var></code> is tail-called and the
       resulting values are returned.  It could be defined by</p>
 
     <pre>
@@ -585,12 +608,12 @@
                          lis transducers)))</pre>
 
     <pre>
-    (bind/list '(1 2 3) (map-values (lambda (x) (* 3 x))))   ⟹ 3 6 9</pre>
+    (bind/list '(1 2 3) (map-values (lambda (x) (* 3 x))))   &xrArr; 3 6 9</pre>
 
-    <p>(bind/box <var>box</var> <var>transducer<sub>1</sub></var> …)</p>
+    <p>(bind/box <var>box</var> <var>transducer<sub>1</sub></var> &hellip;)</p>
 
     <p>It is an error if <code><var>box</var></code> is not a box
-      and the <code><var>transducers</var></code> are no
+      and the <code><var>transducers</var></code> are not
       procedures.</p>
 
     <p>The <code>bind</code> procedure applies the values of
@@ -606,12 +629,12 @@
       (apply bind/list (list/mv (unbox bx)) transducers))</pre>
 
     <pre>
-    (bind/box (box 1 2 3) (map-values (lambda (x) (* 3 x))))   ⟹ 3 6 9</pre>
+    (bind/box (box 1 2 3) (map-values (lambda (x) (* 3 x))))   &xrArr; 3 6 9</pre>
 
-    <p>(bind <var>obj</var> <var>transducer<sub>1</sub></var> …)</p>
+    <p>(bind <var>obj</var> <var>transducer<sub>1</sub></var> &hellip;)</p>
 
     <p>It is an error if the <code><var>transducers</var></code> are
-      no procedures.</p>
+      not procedures.</p>
 
     <p>The <code>bind</code> procedure applies
       the <code><var>obj</var></code>
@@ -626,7 +649,7 @@
       (apply bind/list (list obj) transducers))</pre>
 
     <pre>
-    (bind 1 (lambda (x) (values (* 3 x) (+ 1 x))))   ⟹ 3 2</pre>
+    (bind 1 (lambda (x) (values (* 3 x) (+ 1 x))))   &xrArr; 3 2</pre>
 
     <h2 id="implementation">Implementation</h2>
 
@@ -653,6 +676,14 @@
     </p>
 
     <p>Jim Rees read the example code in the first draft carefully.</p>
+
+    <p>Wolfgang Corcoran-Mathe made an extensive review and shared his
+    helpful comments on the mailing list.</p>
+
+    <p>The idea of the <code>with-values</code> form comes from the
+    paper <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.69.5878&rep=rep1&type=pdf"><cite>An Efficient Implementation of Multiple
+    Return Values in Scheme</cite></a> by J. Michael Ashley and
+    R. Kent Dybvig.</p>
 
     <h2 id="copyright">Copyright</h2>
     <p>&copy; 2020 Marc Nieper-Wißkirchen.</p>
