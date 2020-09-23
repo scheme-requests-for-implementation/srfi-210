@@ -116,6 +116,10 @@
 
     <h2 id="specification">Specification</h2>
 
+    <p>When this specification talks about <em>boxes</em>, it refers
+      to the disjoint Scheme type described by SRFI 111 (single valued)
+      and SRFI 195 (multiple-valued).</p>
+
     <h3>Syntax</h3>
 
     <p><code>(apply/mv <span class="token">operator</span> <span class="token">operand<sub>1</sub></span> &hellip; <span class="token">producer</span>)</code></p>
@@ -392,7 +396,7 @@
     (with-values (values 4 5)
       (lambda (a b) b))         &xrArr; 5</pre>
 
-    <p><code>(case-receive <span class="token">producer</span> (clause &hellip;))</code></p>
+    <p><code>(case-receive <span class="token">producer</span> <span class="token">clause</span> &hellip;)</code></p>
 
     <p><i>Syntax:</i> <code><span class="token">producer</span></code> can be any expression
       and each <code><span class="token">clause</span></code> is of the form <code>(<span class="token">formals</span>
@@ -417,7 +421,7 @@
       (syntax-rules ()
         ((case-receive producer clause ...)
          (with-values producer
-           (case-lambda clause ...)))</pre>
+           (case-lambda clause ...)))))</pre>
 
     <pre>
     (case-receive (values 'a 'b)
@@ -458,7 +462,7 @@
 
     <p><code>(list-values <var>list</var>)</code></p>
 
-    <p>Is is an error if <code><var>list</var></code> is not a list.</p>
+    <p>It is an error if <code><var>list</var></code> is not a list.</p>
 
     <p>
       The <code>list-values</code> procedure yields the elements
@@ -542,8 +546,8 @@
     <p>The <code>compose</code> procedure yields the functional
       composition of the <code><var>transducers</var></code>.  When
       the resulting procedure is applied to arguments, these arguments
-      are applied to <code><var>transducer<sub>1</sub></var></code>,
-      whose results are applied
+      are passed to <code><var>transducer<sub>1</sub></var></code>,
+      whose results are passed
       to <code><var>transducer<sub>2</sub></var></code>, and so on
       until the final results are returned.  It could be defined by</p>
 
@@ -586,7 +590,7 @@
     <p>(bind/list <var>list</var> <var>transducer<sub>1</sub></var> &hellip;)</p>
 
     <p>It is an error if <code><var>list</var></code> is not a list
-      and the <code><var>transducers</var></code> are no
+      and the <code><var>transducers</var></code> are not
       procedures.</p>
 
     <p>The <code>bind</code> procedure applies
@@ -594,7 +598,7 @@
       to <code><var>transducer<sub>1</sub></var></code>, whose results
       are then applied
       to <code><var>transducer<sub>2</sub></var></code>, and so on until
-      the final <code><var>tranducer</var></code> is tail-called and the
+      the final <code><var>transducer</var></code> is tail-called and the
       resulting values are returned.  It could be defined by</p>
 
     <pre>
@@ -609,7 +613,7 @@
     <p>(bind/box <var>box</var> <var>transducer<sub>1</sub></var> &hellip;)</p>
 
     <p>It is an error if <code><var>box</var></code> is not a box
-      and the <code><var>transducers</var></code> are no
+      and the <code><var>transducers</var></code> are not
       procedures.</p>
 
     <p>The <code>bind</code> procedure applies the values of
@@ -630,7 +634,7 @@
     <p>(bind <var>obj</var> <var>transducer<sub>1</sub></var> &hellip;)</p>
 
     <p>It is an error if the <code><var>transducers</var></code> are
-      no procedures.</p>
+      not procedures.</p>
 
     <p>The <code>bind</code> procedure applies
       the <code><var>obj</var></code>
