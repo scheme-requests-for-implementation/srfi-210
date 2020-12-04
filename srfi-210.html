@@ -594,10 +594,10 @@
       and the <code><var>transducers</var></code> are not
       procedures.</p>
 
-    <p>The <code>bind/list</code> procedure applies
+    <p>The <code>bind/list</code> procedure passes
       the elements of <code><var>list</var></code>
       to <code><var>transducer<sub>1</sub></var></code>, whose results
-      are then applied
+      are then passed
       to <code><var>transducer<sub>2</sub></var></code>, and so on until
       the final <code><var>transducer</var></code> is tail-called and the
       resulting values are returned.  It could be defined by</p>
@@ -617,10 +617,10 @@
       and the <code><var>transducers</var></code> are not
       procedures.</p>
 
-    <p>The <code>bind/box</code> procedure applies the values of
+    <p>The <code>bind/box</code> procedure passes the values of
       <code><var>box</var></code>
       to <code><var>transducer<sub>1</sub></var></code>, whose results
-      are then applied
+      are then passed
       to <code><var>transducer<sub>2</sub></var></code>, and so on until
       the final <code><var>tranducer</var></code> is tail-called and the
       resulting values are returned.  It could be defined by</p>
@@ -637,10 +637,10 @@
     <p>It is an error if the <code><var>transducers</var></code> are
       not procedures.</p>
 
-    <p>The <code>bind</code> procedure applies
+    <p>The <code>bind</code> procedure passes
       the <code><var>obj</var></code>
       to <code><var>transducer<sub>1</sub></var></code>, whose results
-      are then applied
+      are then passed
       to <code><var>transducer<sub>2</sub></var></code>, and so on until
       the final <code><var>tranducer</var></code> is tail-called and the
       resulting values are returned.  It could be defined by</p>
