@@ -168,7 +168,7 @@
     <p><i>Syntax:</i> <code><span class="token">Consumer</span></code> and each <code><span class="token">producer</span></code> can be
     any expression.</p>
 
-    <p><i>Semantics:</i> An <code>call/mv</code> expression is
+    <p><i>Semantics:</i> A <code>call/mv</code> expression is
     evaluated as follows: <code><span class="token">Consumer</span></code> and
     each <code><span class="token">producer</span></code> are evaluated in an unspecified
     order.  The procedure resulting from
@@ -438,7 +438,7 @@
       evaluated as follows: <code><span class="token">Producer</span></code> and
       the <code><span class="token">transducers</span></code> are evaluated in an unspecified
       order.  The procedure resulting from
-      evaluating <code><span class="token">transducer<sub>1</sub></span></code>is then applied
+      evaluating <code><span class="token">transducer<sub>1</sub></span></code> is then applied
       to the values resulting from
       evaluating <code><span class="token">producer</span></code>. The resulting values are
       then applied to <code><span class="token">transducer<sub>2</sub></span></code>, and so on
@@ -594,7 +594,7 @@
       and the <code><var>transducers</var></code> are not
       procedures.</p>
 
-    <p>The <code>bind</code> procedure applies
+    <p>The <code>bind/list</code> procedure applies
       the elements of <code><var>list</var></code>
       to <code><var>transducer<sub>1</sub></var></code>, whose results
       are then applied
@@ -617,7 +617,7 @@
       and the <code><var>transducers</var></code> are not
       procedures.</p>
 
-    <p>The <code>bind</code> procedure applies the values of
+    <p>The <code>bind/box</code> procedure applies the values of
       <code><var>box</var></code>
       to <code><var>transducer<sub>1</sub></var></code>, whose results
       are then applied
