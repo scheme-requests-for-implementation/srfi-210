@@ -28,7 +28,7 @@
           vector/mv
           box/mv
           value/mv
-          arity
+          coarity
           set!-values
           with-values
           case-receive

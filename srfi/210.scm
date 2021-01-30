@@ -73,9 +73,9 @@
     ((value/mv index operand1 ... producer)
      (apply/mv value index operand1 ... producer))))
 
-(define-syntax arity
+(define-syntax coarity
   (syntax-rules ()
-    ((arity producer)
+    ((coarity producer)
      (let-values ((res producer))
        (length res)))))
 

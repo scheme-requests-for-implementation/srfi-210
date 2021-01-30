@@ -49,7 +49,7 @@
 
       (test-equal 'b (value/mv 1 'a (values 'b 'c)))
 
-      (test-equal 3 (arity (values 'a 'b 'c)))
+      (test-equal 3 (coarity (values 'a 'b 'c)))
 
       (test-equal '(a (b))
         (let ((x #f) (y #f))

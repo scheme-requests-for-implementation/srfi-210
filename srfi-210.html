@@ -302,26 +302,26 @@
     <pre>
     (value/mv 1 'a (values 'b 'c))   &xrArr; b</pre>
 
-    <p><code>(arity <span class="token">producer</span>)</code></p>
+    <p><code>(coarity <span class="token">producer</span>)</code></p>
 
     <p><i>Syntax:</i> <code><span class="token">Producer</span></code> can be any
     expression.</p>
 
-    <p><i>Semantics:</i> An <code>arity</code> expression is
+    <p><i>Semantics:</i> An <code>coarity</code> expression is
     evaluated as follows: <code><span class="token">Producer</span></code> is evaluated and
     then the number of resulting values is returned.</p>
 
-    <p>The <code>arity</code> syntax could be defined by</p>
+    <p>The <code>coarity</code> syntax could be defined by</p>
 
     <pre>
-    (define-syntax arity
+    (define-syntax coarity
       (syntax-rules ()
-        ((arity producer)
+        ((coarity producer)
          (let-values ((res producer))
            (length res)))))</pre>
 
     <pre>
-    (arity (values 'a 'b 'c))   &xrArr; 3</pre>
+    (coarity (values 'a 'b 'c))   &xrArr; 3</pre>
 
     <p><code>(set!-values <span class="token">formals</span> <span class="token">producer</span>)</code></p>
 
