@@ -168,7 +168,7 @@
     <p><i>Syntax:</i> <code><span class="token">Consumer</span></code> and each <code><span class="token">producer</span></code> can be
     any expression.</p>
 
-    <p><i>Semantics:</i> An <code>call/mv</code> expression is
+    <p><i>Semantics:</i> A <code>call/mv</code> expression is
     evaluated as follows: <code><span class="token">Consumer</span></code> and
     each <code><span class="token">producer</span></code> are evaluated in an unspecified
     order.  The procedure resulting from
@@ -302,26 +302,26 @@
     <pre>
     (value/mv 1 'a (values 'b 'c))   &xrArr; b</pre>
 
-    <p><code>(arity <span class="token">producer</span>)</code></p>
+    <p><code>(coarity <span class="token">producer</span>)</code></p>
 
     <p><i>Syntax:</i> <code><span class="token">Producer</span></code> can be any
     expression.</p>
 
-    <p><i>Semantics:</i> An <code>arity</code> expression is
+    <p><i>Semantics:</i> An <code>coarity</code> expression is
     evaluated as follows: <code><span class="token">Producer</span></code> is evaluated and
     then the number of resulting values is returned.</p>
 
-    <p>The <code>arity</code> syntax could be defined by</p>
+    <p>The <code>coarity</code> syntax could be defined by</p>
 
     <pre>
-    (define-syntax arity
+    (define-syntax coarity
       (syntax-rules ()
-        ((arity producer)
+        ((coarity producer)
          (let-values ((res producer))
            (length res)))))</pre>
 
     <pre>
-    (arity (values 'a 'b 'c))   &xrArr; 3</pre>
+    (coarity (values 'a 'b 'c))   &xrArr; 3</pre>
 
     <p><code>(set!-values <span class="token">formals</span> <span class="token">producer</span>)</code></p>
 
@@ -438,7 +438,7 @@
       evaluated as follows: <code><span class="token">Producer</span></code> and
       the <code><span class="token">transducers</span></code> are evaluated in an unspecified
       order.  The procedure resulting from
-      evaluating <code><span class="token">transducer<sub>1</sub></span></code>is then applied
+      evaluating <code><span class="token">transducer<sub>1</sub></span></code> is then applied
       to the values resulting from
       evaluating <code><span class="token">producer</span></code>. The resulting values are
       then applied to <code><span class="token">transducer<sub>2</sub></span></code>, and so on
@@ -534,18 +534,18 @@
       be defined by</p>
 
     <pre>
-      (define identity values)</pre>
+    (define identity values)</pre>
 
     <pre>
     (identity 1 2 3)   &xrArr; 1 2 3</pre>
 
-    <p><code>(compose <var>transducer<sub>1</sub></var> &hellip;)</code></p>
+    <p><code>(compose-left <var>transducer<sub>1</sub></var> &hellip;)</code></p>
 
     <p>It is an error if the <code><var>transducers</var></code>
     are not procedures.</p>
 
-    <p>The <code>compose</code> procedure yields the functional
-      composition of the <code><var>transducers</var></code>.  When
+    <p>The <code>compose-left</code> procedure yields the functional
+      left composition of the <code><var>transducers</var></code>.  When
       the resulting procedure is applied to arguments, these arguments
       are passed to <code><var>transducer<sub>1</sub></var></code>,
       whose results are passed
@@ -553,7 +553,7 @@
       until the final results are returned.  It could be defined by</p>
 
     <pre>
-    (define compose
+    (define compose-left
       (case-lambda
         (() identity)
         ((transducer . transducers)
@@ -567,7 +567,37 @@
     <pre>
     (let ((f (map-values (lambda (x) (* 2 x))))
           (g (map-values (lambda (x) (+ x 1)))))
-       ((compose f g) 1 2 3)))                     &xrArr; 3 5 7</pre>
+       ((compose-left f g) 1 2 3)))                &xrArr; 3 5 7</pre>
+
+    <p><code>(compose-right <var>transducer<sub>1</sub></var> &hellip; <var>transducer<sub>n</sub></var>)</code></p>
+
+    <p>It is an error if the <code><var>transducers</var></code>
+    are not procedures.</p>
+
+    <p>The <code>compose-right</code> procedure yields the functional
+      right composition of the <code><var>transducers</var></code>.  When
+      the resulting procedure is applied to arguments, these arguments
+      are passed to <code><var>transducer<sub>n</sub></var></code>,
+      whose results are passed
+      to <code><var>transducer<sub>n-1</sub></var></code>, and so on
+      until the final results are returned.  It could be defined by</p>
+
+    <pre>
+    (define compose-right
+      (case-lambda
+        (() identity)
+        ((transducer . transducers)
+         (let f ((transducer transducer) (transducers transducers))
+           (if (null? transducers)
+               transducer
+               (let ((composition (f (car transducers) (cdr transducers))))
+                 (lambda args
+                   (apply/mv transducer (apply composition args)))))))))</pre>
+
+    <pre>
+    (let ((f (map-values (lambda (x) (* 2 x))))
+          (g (map-values (lambda (x) (+ x 1)))))
+       ((compose-right f g) 1 2 3)))               &xrArr; 4 6 8</pre>
 
     <p><code>(map-values <var>proc</var>)</code></p>
 
@@ -594,10 +624,10 @@
       and the <code><var>transducers</var></code> are not
       procedures.</p>
 
-    <p>The <code>bind</code> procedure applies
+    <p>The <code>bind/list</code> procedure passes
       the elements of <code><var>list</var></code>
       to <code><var>transducer<sub>1</sub></var></code>, whose results
-      are then applied
+      are then passed
       to <code><var>transducer<sub>2</sub></var></code>, and so on until
       the final <code><var>transducer</var></code> is tail-called and the
       resulting values are returned.  It could be defined by</p>
@@ -617,10 +647,10 @@
       and the <code><var>transducers</var></code> are not
       procedures.</p>
 
-    <p>The <code>bind</code> procedure applies the values of
+    <p>The <code>bind/box</code> procedure passes the values of
       <code><var>box</var></code>
       to <code><var>transducer<sub>1</sub></var></code>, whose results
-      are then applied
+      are then passed
       to <code><var>transducer<sub>2</sub></var></code>, and so on until
       the final <code><var>tranducer</var></code> is tail-called and the
       resulting values are returned.  It could be defined by</p>
@@ -637,10 +667,10 @@
     <p>It is an error if the <code><var>transducers</var></code> are
       not procedures.</p>
 
-    <p>The <code>bind</code> procedure applies
+    <p>The <code>bind</code> procedure passes
       the <code><var>obj</var></code>
       to <code><var>transducer<sub>1</sub></var></code>, whose results
-      are then applied
+      are then passed
       to <code><var>transducer<sub>2</sub></var></code>, and so on until
       the final <code><var>tranducer</var></code> is tail-called and the
       resulting values are returned.  It could be defined by</p>

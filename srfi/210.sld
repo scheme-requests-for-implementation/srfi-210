@@ -28,7 +28,7 @@
           vector/mv
           box/mv
           value/mv
-          arity
+          coarity
           set!-values
           with-values
           case-receive
@@ -38,7 +38,8 @@
           box-values
           value
           identity
-          compose
+          compose-left
+          compose-right
           map-values
           bind/list
           bind/box

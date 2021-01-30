@@ -49,7 +49,7 @@
 
       (test-equal 'b (value/mv 1 'a (values 'b 'c)))
 
-      (test-equal 3 (arity (values 'a 'b 'c)))
+      (test-equal 3 (coarity (values 'a 'b 'c)))
 
       (test-equal '(a (b))
         (let ((x #f) (y #f))
@@ -85,7 +85,12 @@
       (test-values (3 5 7)
         (let ((f (map-values (lambda (x) (* 2 x))))
               (g (map-values (lambda (x) (+ x 1)))))
-          ((compose f g) 1 2 3)))
+          ((compose-left f g) 1 2 3)))
+
+      (test-values (4 6 8)
+        (let ((f (map-values (lambda (x) (* 2 x))))
+              (g (map-values (lambda (x) (+ x 1)))))
+          ((compose-right f g) 1 2 3)))
 
       (test-values (#t #f #t) ((map-values odd?) 1 2 3))
 

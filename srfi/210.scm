@@ -73,9 +73,9 @@
     ((value/mv index operand1 ... producer)
      (apply/mv value index operand1 ... producer))))
 
-(define-syntax arity
+(define-syntax coarity
   (syntax-rules ()
-    ((arity producer)
+    ((coarity producer)
      (let-values ((res producer))
        (length res)))))
 
@@ -137,7 +137,7 @@
 
 (define identity values)
 
-(define compose
+(define compose-left
   (case-lambda
     (() identity)
     ((transducer . transducers)
@@ -147,6 +147,17 @@
            (let ((composition (f (car transducers) (cdr transducers))))
              (lambda args
                (apply/mv composition (apply transducer args)))))))))
+
+(define compose-right
+  (case-lambda
+    (() identity)
+    ((transducer . transducers)
+     (let f ((transducer transducer) (transducers transducers))
+       (if (null? transducers)
+           transducer
+           (let ((composition (f (car transducers) (cdr transducers))))
+             (lambda args
+               (apply/mv transducer (apply composition args)))))))))
 
 (define (map-values proc)
   (lambda args
