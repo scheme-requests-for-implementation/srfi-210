@@ -87,6 +87,11 @@
               (g (map-values (lambda (x) (+ x 1)))))
           ((compose-left f g) 1 2 3)))
 
+      (test-values (4 6 8)
+        (let ((f (map-values (lambda (x) (* 2 x))))
+              (g (map-values (lambda (x) (+ x 1)))))
+          ((compose-right f g) 1 2 3)))
+
       (test-values (#t #f #t) ((map-values odd?) 1 2 3))
 
       (test-values (3 6 9)

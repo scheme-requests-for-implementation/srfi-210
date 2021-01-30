@@ -534,7 +534,7 @@
       be defined by</p>
 
     <pre>
-      (define identity values)</pre>
+    (define identity values)</pre>
 
     <pre>
     (identity 1 2 3)   &xrArr; 1 2 3</pre>
@@ -545,7 +545,7 @@
     are not procedures.</p>
 
     <p>The <code>compose-left</code> procedure yields the functional
-      composition of the <code><var>transducers</var></code>.  When
+      left composition of the <code><var>transducers</var></code>.  When
       the resulting procedure is applied to arguments, these arguments
       are passed to <code><var>transducer<sub>1</sub></var></code>,
       whose results are passed
@@ -568,6 +568,36 @@
     (let ((f (map-values (lambda (x) (* 2 x))))
           (g (map-values (lambda (x) (+ x 1)))))
        ((compose-left f g) 1 2 3)))                &xrArr; 3 5 7</pre>
+
+    <p><code>(compose-right <var>transducer<sub>1</sub></var> &hellip; <var>transducer<sub>n</sub></var>)</code></p>
+
+    <p>It is an error if the <code><var>transducers</var></code>
+    are not procedures.</p>
+
+    <p>The <code>compose-right</code> procedure yields the functional
+      right composition of the <code><var>transducers</var></code>.  When
+      the resulting procedure is applied to arguments, these arguments
+      are passed to <code><var>transducer<sub>n</sub></var></code>,
+      whose results are passed
+      to <code><var>transducer<sub>n-1</sub></var></code>, and so on
+      until the final results are returned.  It could be defined by</p>
+
+    <pre>
+    (define compose-right
+      (case-lambda
+        (() identity)
+        ((transducer . transducers)
+         (let f ((transducer transducer) (transducers transducers))
+           (if (null? transducers)
+               transducer
+               (let ((composition (f (car transducers) (cdr transducers))))
+                 (lambda args
+                   (apply/mv transducer (apply composition args)))))))))</pre>
+
+    <pre>
+    (let ((f (map-values (lambda (x) (* 2 x))))
+          (g (map-values (lambda (x) (+ x 1)))))
+       ((compose-right f g) 1 2 3)))               &xrArr; 4 6 8</pre>
 
     <p><code>(map-values <var>proc</var>)</code></p>
 

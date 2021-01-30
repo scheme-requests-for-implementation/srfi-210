@@ -39,6 +39,7 @@
           value
           identity
           compose-left
+          compose-right
           map-values
           bind/list
           bind/box
