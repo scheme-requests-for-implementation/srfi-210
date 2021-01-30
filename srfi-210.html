@@ -539,12 +539,12 @@
     <pre>
     (identity 1 2 3)   &xrArr; 1 2 3</pre>
 
-    <p><code>(compose <var>transducer<sub>1</sub></var> &hellip;)</code></p>
+    <p><code>(compose-left <var>transducer<sub>1</sub></var> &hellip;)</code></p>
 
     <p>It is an error if the <code><var>transducers</var></code>
     are not procedures.</p>
 
-    <p>The <code>compose</code> procedure yields the functional
+    <p>The <code>compose-left</code> procedure yields the functional
       composition of the <code><var>transducers</var></code>.  When
       the resulting procedure is applied to arguments, these arguments
       are passed to <code><var>transducer<sub>1</sub></var></code>,
@@ -553,7 +553,7 @@
       until the final results are returned.  It could be defined by</p>
 
     <pre>
-    (define compose
+    (define compose-left
       (case-lambda
         (() identity)
         ((transducer . transducers)
@@ -567,7 +567,7 @@
     <pre>
     (let ((f (map-values (lambda (x) (* 2 x))))
           (g (map-values (lambda (x) (+ x 1)))))
-       ((compose f g) 1 2 3)))                     &xrArr; 3 5 7</pre>
+       ((compose-left f g) 1 2 3)))                &xrArr; 3 5 7</pre>
 
     <p><code>(map-values <var>proc</var>)</code></p>
 

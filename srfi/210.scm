@@ -137,7 +137,7 @@
 
 (define identity values)
 
-(define compose
+(define compose-left
   (case-lambda
     (() identity)
     ((transducer . transducers)
