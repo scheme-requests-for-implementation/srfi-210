@@ -136,7 +136,7 @@
     evaluated in an unspecified order.  The procedure resulting from
     evaluating <code><span class="token">operator</span></code> is then tail-called with the
     single values of the <code><span class="token">operand</span></code>s and the multiple
-    values of <code><span class="token">producer</span></code> as the actual arguments.  The
+    values of <code><span class="token">producer</span></code> in that order as the actual arguments.  The
     values returned by the procedure are returned.
     </p>
 
@@ -211,7 +211,7 @@
       and <code><span class="token">producer</span></code> are evaluated in an unspecified
       order.  A list constructed from the
       single values of the <code><span class="token">elements</span></code>s and the multiple
-      values of <code><span class="token">producer</span></code> is then returned.
+      values of <code><span class="token">producer</span></code> in that order is then returned.
     </p>
 
     <p>The <code>list/mv</code> syntax could be defined by</p>
@@ -235,7 +235,7 @@
       and <code><span class="token">producer</span></code> are evaluated in an unspecified
       order.  A vector constructed from the
       single values of the <code><span class="token">elements</span></code>s and the multiple
-      values of <code><span class="token">producer</span></code> is then returned.
+      values of <code><span class="token">producer</span></code> in that order is then returned.
     </p>
 
     <p>The <code>vector/mv</code> syntax could be defined by</p>
@@ -261,7 +261,7 @@
       (<a href="https://srfi.schemers.org/srfi-195/srfi-195.html">SRFI
       195</a>) box is constructed from the single values of
       the <code><span class="token">elements</span></code>s and the multiple values
-      of <code><span class="token">producer</span></code> is then returned.
+      of <code><span class="token">producer</span></code> in then order is then returned.
     </p>
 
     <p>The <code>box/mv</code> syntax could be defined by</p>
@@ -288,7 +288,7 @@
       value <var>i</var> of <code><span class="token">index</span></code> is not an exact
       non-negative index.  The <em>i</em>th element of the list
       consisting of the single values of the <code><span class="token">operands</span></code>s
-      and the multiple values of <code><span class="token">producer</span></code> is then
+      and the multiple values of <code><span class="token">producer</span></code> in that order is then
       returned.  It is an error if there is no such element.
     </p>
 
