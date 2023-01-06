@@ -619,10 +619,12 @@
       resulting values are returned.  It could be defined by</p>
 
     <pre>
-    (define (bind/list lis . transducers)
-      (list-values (fold (lambda (transducer lis)
-                           (list/mv (apply transducer lis)))
-                         lis transducers)))</pre>
+    (define bind/list
+      (case-lambda
+        ((lis) (list-values lis))
+        ((lis transducer) (apply transducer lis))
+        ((lis transducer . transducers)
+         (apply bind/list (list/mv (apply transducer lis)) transducers))))</pre>
 
     <pre>
     (bind/list '(1 2 3) (map-values (lambda (x) (* 3 x))))   &xrArr; 3 6 9</pre>
