@@ -604,7 +604,7 @@
     <pre>
     ((map-values odd?) 1 2 3))   &xrArr; #t #f #t</pre>
 
-    <p>(bind/list <var>list</var> <var>transducer<sub>1</sub></var> &hellip;)</p>
+    <p><code>(bind/list <var>list</var> <var>transducer<sub>1</sub></var> &hellip;)</code></p>
 
     <p>It is an error if <code><var>list</var></code> is not a list
       or the <code><var>transducers</var></code> are not
@@ -627,7 +627,7 @@
     <pre>
     (bind/list '(1 2 3) (map-values (lambda (x) (* 3 x))))   &xrArr; 3 6 9</pre>
 
-    <p>(bind/box <var>box</var> <var>transducer<sub>1</sub></var> &hellip;)</p>
+    <p><code>(bind/box <var>box</var> <var>transducer<sub>1</sub></var> &hellip;)</code></p>
 
     <p>It is an error if <code><var>box</var></code> is not a box
       or the <code><var>transducers</var></code> are not
@@ -648,7 +648,7 @@
     <pre>
     (bind/box (box 1 2 3) (map-values (lambda (x) (* 3 x))))   &xrArr; 3 6 9</pre>
 
-    <p>(bind <var>obj</var> <var>transducer<sub>1</sub></var> &hellip;)</p>
+    <p><code>(bind <var>obj</var> <var>transducer<sub>1</sub></var> &hellip;)</code></p>
 
     <p>It is an error if the <code><var>transducers</var></code> are
       not procedures.</p>
