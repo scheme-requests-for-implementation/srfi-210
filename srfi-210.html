@@ -43,6 +43,9 @@
       <li>Draft #4 published: 2020-11-27</li>
       <li>Draft #5 published: 2021-01-30</li>
       <li>Finalized: 2021-02-12</li>
+      <li>Revised to fix errata:
+      <ul>
+        <li>2023-01-16 (Fix <a href="#bind/list-sample-implementation">sample <code>bind/list</code> implementation</a> to satisfy tail-call requirement.)</li></ul></li>
     </ul>
 
     <h2 id="abstract">Abstract</h2>
@@ -610,7 +613,7 @@
       or the <code><var>transducers</var></code> are not
       procedures.</p>
 
-    <p>The <code>bind/list</code> procedure passes
+    <p id="bind/list-sample-implementation">The <code>bind/list</code> procedure passes
       the elements of <code><var>list</var></code>
       to <code><var>transducer<sub>1</sub></var></code>, whose results
       are then passed
