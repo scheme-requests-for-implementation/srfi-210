@@ -163,10 +163,12 @@
   (lambda args
     (list-values (map proc args))))
 
-(define (bind/list lis . transducers)
-  (list-values (fold (lambda (transducer lis)
-                       (list/mv (apply transducer lis)))
-                     lis transducers)))
+(define bind/list
+  (case-lambda
+    ((lis) (list-values lis))
+    ((lis transducer) (apply transducer lis))
+    ((lis transducer . transducers)
+     (apply bind/list (list/mv (apply transducer lis)) transducers))))
 
 (define (bind/box bx . transducers)
   (apply bind/list (list/mv (unbox bx)) transducers))
