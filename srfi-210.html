@@ -556,7 +556,7 @@
     <pre>
     (let ((f (map-values (lambda (x) (* 2 x))))
           (g (map-values (lambda (x) (+ x 1)))))
-       ((compose-left f g) 1 2 3)))                &xrArr; 3 5 7</pre>
+       ((compose-left f g) 1 2 3))                &xrArr; 3 5 7</pre>
 
     <p><code>(compose-right <var>transducer<sub>1</sub></var> &hellip; <var>transducer<sub>n</sub></var>)</code></p>
 
@@ -586,7 +586,7 @@
     <pre>
     (let ((f (map-values (lambda (x) (* 2 x))))
           (g (map-values (lambda (x) (+ x 1)))))
-       ((compose-right f g) 1 2 3)))               &xrArr; 4 6 8</pre>
+       ((compose-right f g) 1 2 3))               &xrArr; 4 6 8</pre>
 
     <p><code>(map-values <var>proc</var>)</code></p>
 
@@ -605,7 +605,7 @@
         (list-values (map proc args))))</pre>
 
     <pre>
-    ((map-values odd?) 1 2 3))   &xrArr; #t #f #t</pre>
+    ((map-values odd?) 1 2 3)   &xrArr; #t #f #t</pre>
 
     <p><code>(bind/list <var>list</var> <var>transducer<sub>1</sub></var> &hellip;)</code></p>
 
