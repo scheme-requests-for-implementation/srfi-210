@@ -45,7 +45,8 @@
       <li>Finalized: 2021-02-12</li>
       <li>Revised to fix errata:
       <ul>
-        <li>2023-01-16 (Fix <a href="#bind/list-sample-implementation">sample <code>bind/list</code> implementation</a> to satisfy tail-call requirement.)</li></ul></li>
+        <li>2023-01-16 (Fix <a href="#bind/list-sample-implementation">sample <code>bind/list</code> implementation</a> to satisfy tail-call requirement.)</li>
+        <li>2023-07-23 (Fix <a href="#multiple-value-call">note about <code>multiple-value-call</code></a> to refer to it as a special operator instead of a function.)</li></ul></li>
     </ul>
 
     <h2 id="abstract">Abstract</h2>
@@ -167,8 +168,8 @@
     returned.
     </p>
 
-    <p><i>Note:</i> This syntax is equivalent to the Common Lisp function
-      <code>multiple-value-call</code>.</p>
+    <p id="multiple-value-call"><i>Note:</i> This syntax is equivalent to the Common Lisp
+      special operator <code>multiple-value-call</code>.</p>
 
     <p>The <code>call/mv</code> syntax could be defined by</p>
 
