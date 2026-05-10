@@ -81,6 +81,9 @@
 
 (define-syntax set!-values
   (syntax-rules ()
+    ((set!-values () producer)
+     (let-values ((() producer))
+       (if #f #f)))
     ((set!-values (var1 ...) producer)
      (letrec-syntax
          ((aux (syntax-rules ::: ()
@@ -101,7 +104,7 @@
                   (aux (var2 :::) (temp ::: (%var1 temp1)) %producer)))))
        (aux (var1 ... var*) () producer)))
     ((set!-values var* producer)
-     (let-values ((temp*) producer)
+     (let-values ((temp* producer))
        (set! var* temp*)))))
 
 (define-syntax with-values
