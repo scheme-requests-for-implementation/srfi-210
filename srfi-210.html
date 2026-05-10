@@ -46,7 +46,9 @@
       <li>Revised to fix errata:
       <ul>
         <li>2023-01-16 (Fix <a href="#bind/list-sample-implementation">sample <code>bind/list</code> implementation</a> to satisfy tail-call requirement.)</li>
-        <li>2023-07-23 (Fix <a href="#multiple-value-call">note about <code>multiple-value-call</code></a> to refer to it as a special operator instead of a function.)</li></ul></li>
+        <li>2023-07-23 (Fix <a href="#multiple-value-call">note about <code>multiple-value-call</code></a> to refer to it as a special operator instead of a function.)</li>
+        <li>2026-50-10 (Fix sample implementation of <a href="#set!-values-sample-implementation"><code>set!-values</code></a>.)</li>
+</ul></li>
     </ul>
 
     <h2 id="abstract">Abstract</h2>
@@ -329,7 +331,7 @@
       expression is unspecified.
     </p>
 
-    <p>The <code>set!-values</code> syntax could be defined by</p>
+    <p id="set!-values-sample-implementation">The <code>set!-values</code> syntax could be defined by</p>
 
     <pre>
     (define-syntax set!-values
